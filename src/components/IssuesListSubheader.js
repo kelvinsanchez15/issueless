@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
 export default function IssuesListSubHeader() {
   const classes = useStyles();
   return (
-    <ListSubheader component="div" className={classes.root} inset>
+    <ListSubheader component="div" className={classes.root} inset disableSticky>
       <div>
         <Button startIcon={<OpenIssueIcon />}>301 Open</Button>
         <Button startIcon={<ClosedIssueIcon />}>39,345 Closed</Button>
