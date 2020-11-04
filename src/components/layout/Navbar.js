@@ -92,7 +92,7 @@ export default function Navbar() {
 
   return (
     <nav className={classes.grow}>
-      <AppBar position="fixed" color="default">
+      <AppBar position="static" color="default">
         <Toolbar>
           <IconButton
             className={classes.logo}
@@ -192,7 +192,6 @@ export default function Navbar() {
           </Menu>
         </Toolbar>
       </AppBar>
-      <Toolbar />
     </nav>
   );
 }
