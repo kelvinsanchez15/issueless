@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Container,
   Paper,
   Typography,
   List,
@@ -57,72 +56,62 @@ export default function IssuesList({ issues }) {
   };
 
   return (
-    <>
-      <Container className={classes.root}>
-        <Paper variant="outlined">
-          <List subheader={<IssuesListSubHeader />}>
-            <Divider />
-            {issues.map((issue) => (
-              <ListItem key={issue.id} divider>
-                <ListItemIcon>
-                  {issue.state === 'open' ? (
-                    <OpenIssueIcon color="secondary" titleAccess="Open issue" />
-                  ) : (
-                    <ClosedIssueIcon
-                      color="error"
-                      titleAccess="Clossed issue"
-                    />
-                  )}
-                </ListItemIcon>
-                <ListItemText
-                  className={classes.listItemText}
-                  disableTypography
-                >
-                  <Typography variant="body1" display="inline">
-                    {issue.title}
-                  </Typography>
-                  <span className={classes.labels}>
-                    {issue.labels.map((label) => (
-                      <Chip
-                        key={label.id}
-                        label={label.name}
-                        title={label.description}
-                        size="small"
-                        style={{
-                          backgroundColor: `#${label.color}`,
-                          color: getContrastYIQ(label.color),
-                        }}
-                      />
-                    ))}
-                  </span>
-                  <Typography
-                    variant="subtitle2"
-                    color="textSecondary"
-                    display="block"
-                  >
-                    {issue.state === 'open'
-                      ? `#${issue.number} 
+    <Paper variant="outlined" className={classes.root}>
+      <List subheader={<IssuesListSubHeader />}>
+        <Divider />
+        {issues.map((issue) => (
+          <ListItem key={issue.id} divider>
+            <ListItemIcon>
+              {issue.state === 'open' ? (
+                <OpenIssueIcon color="secondary" titleAccess="Open issue" />
+              ) : (
+                <ClosedIssueIcon color="error" titleAccess="Clossed issue" />
+              )}
+            </ListItemIcon>
+            <ListItemText className={classes.listItemText} disableTypography>
+              <Typography variant="body1" display="inline">
+                {issue.title}
+              </Typography>
+              <span className={classes.labels}>
+                {issue.labels.map((label) => (
+                  <Chip
+                    key={label.id}
+                    label={label.name}
+                    title={label.description}
+                    size="small"
+                    style={{
+                      backgroundColor: `#${label.color}`,
+                      color: getContrastYIQ(label.color),
+                    }}
+                  />
+                ))}
+              </span>
+              <Typography
+                variant="subtitle2"
+                color="textSecondary"
+                display="block"
+              >
+                {issue.state === 'open'
+                  ? `#${issue.number} 
                     opened ${formatDate(issue.created_at)} 
                     by ${issue.user.login}`
-                      : `#${issue.number} 
+                  : `#${issue.number} 
                     by ${issue.user.login} 
                     was closed ${formatDate(issue.closed_at)}`}
-                  </Typography>
-                </ListItemText>
-                <ListItemSecondaryAction>
-                  {issue.comments > 0 && (
-                    <IconButton aria-label="comments">
-                      <Badge badgeContent={issue.comments} color="primary">
-                        <CommentIcon />
-                      </Badge>
-                    </IconButton>
-                  )}
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-          </List>
-        </Paper>
-      </Container>
-    </>
+              </Typography>
+            </ListItemText>
+            <ListItemSecondaryAction>
+              {issue.comments > 0 && (
+                <IconButton aria-label="comments">
+                  <Badge badgeContent={issue.comments} color="primary">
+                    <CommentIcon />
+                  </Badge>
+                </IconButton>
+              )}
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
+    </Paper>
   );
 }
