@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import ProjectNavbar from 'src/components/layout/ProjectNavbar';
 import IssuesList from 'src/components/IssuesList';
 import IssuesFilter from 'src/components/IssuesFilter';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
     },
   },
-  chipMargin: {
+  ml1: {
     marginLeft: theme.spacing(1),
   },
 }));
@@ -33,13 +34,14 @@ export default function Issues() {
         <title>Issues · test-user/test-project</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <ProjectNavbar />
       <Container className={classes.root}>
         <div className={classes.filterAndButtons}>
           <IssuesFilter />
           <div className={classes.buttonsWraper}>
             <Button variant="outlined" startIcon={<LabelIcon />}>
               Labels
-              <Chip className={classes.chipMargin} label={16} size="small" />
+              <Chip className={classes.ml1} label={16} size="small" />
             </Button>
             <Button color="secondary" variant="contained">
               New Issue
