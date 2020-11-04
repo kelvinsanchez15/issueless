@@ -17,8 +17,13 @@ import {
   Comment as CommentIcon,
 } from '@material-ui/icons';
 import { formatDistanceToNow } from 'date-fns';
+import IssuesListSubHeader from './IssuesListSubheader';
 
 const useStyles = makeStyles((theme) => ({
+  ListSubheader: {
+    display: 'flex',
+    alignItems: 'center',
+  },
   listItemText: {
     '& > *': {
       marginRight: theme.spacing(0.5),
@@ -40,7 +45,7 @@ export default function IssuesList({ issues }) {
   return (
     <>
       <Container>
-        <List>
+        <List subheader={<IssuesListSubHeader />}>
           {issues.map((issue) => (
             <ListItem key={issue.id} divider>
               <ListItemIcon>
