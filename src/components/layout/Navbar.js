@@ -10,6 +10,7 @@ import {
   Badge,
   InputBase,
   Divider,
+  Button,
 } from '@material-ui/core';
 import Link from 'src/components/Link';
 import {
@@ -19,6 +20,7 @@ import {
   Add as AddIcon,
   ArrowDropDown as ArrowDropDownIcon,
 } from '@material-ui/icons';
+import { signOut, useSession } from 'next-auth/client';
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -80,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
   const classes = useStyles();
+  const [session] = useSession();
 
   const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
   const [createAnchorEl, setCreateAnchorEl] = React.useState(null);
@@ -119,77 +122,95 @@ export default function Navbar() {
 
           <div className={classes.grow} />
 
-          <IconButton aria-label="show 17 new notifications" color="inherit">
-            <Badge badgeContent={17} color="secondary">
-              <NotificationsOutlinedIcon />
-            </Badge>
-          </IconButton>
-          <IconButton
-            edge="end"
-            aria-label="create new..."
-            aria-controls="create-new-menu"
-            aria-haspopup="true"
-            onClick={handleCreateMenuOpen}
-            color="inherit"
-          >
-            <AddIcon />
-            <ArrowDropDownIcon />
-          </IconButton>
-          <Menu
-            id="create-new-menu"
-            anchorEl={createAnchorEl}
-            getContentAnchorEl={null}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-            keepMounted
-            open={Boolean(createAnchorEl)}
-            onClose={handleCreateMenuClose}
-          >
-            <MenuItem onClick={handleCreateMenuClose}>New repository</MenuItem>
-            <Divider />
-            <MenuItem onClick={handleCreateMenuClose}>New Issue</MenuItem>
-          </Menu>
+          {!session ? (
+            <Button variant="contained" color="primary" href="/api/auth/signin">
+              Sign in
+            </Button>
+          ) : (
+            <>
+              <IconButton
+                aria-label="show 17 new notifications"
+                color="inherit"
+              >
+                <Badge badgeContent={17} color="secondary">
+                  <NotificationsOutlinedIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                edge="end"
+                aria-label="create new..."
+                aria-controls="create-new-menu"
+                aria-haspopup="true"
+                onClick={handleCreateMenuOpen}
+                color="inherit"
+              >
+                <AddIcon />
+                <ArrowDropDownIcon />
+              </IconButton>
+              <Menu
+                id="create-new-menu"
+                anchorEl={createAnchorEl}
+                getContentAnchorEl={null}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                keepMounted
+                open={Boolean(createAnchorEl)}
+                onClose={handleCreateMenuClose}
+              >
+                <MenuItem onClick={handleCreateMenuClose}>
+                  New repository
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleCreateMenuClose}>New Issue</MenuItem>
+              </Menu>
 
-          <IconButton
-            edge="end"
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="inherit"
-          >
-            <Avatar className={classes.avatarSize} />
-            <ArrowDropDownIcon />
-          </IconButton>
-          <Menu
-            id="primary-search-account-menu"
-            anchorEl={profileAnchorEl}
-            getContentAnchorEl={null}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-            keepMounted
-            open={Boolean(profileAnchorEl)}
-            onClose={handleProfileMenuClose}
-          >
-            <MenuItem
-              className={classes.menuHeader}
-              onClick={handleProfileMenuClose}
-            >
-              <div>Signed in as</div>
-              <div>
-                <strong>test-user</strong>
-              </div>
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={handleProfileMenuClose}>Your profile</MenuItem>
-            <MenuItem onClick={handleProfileMenuClose}>
-              Your repositories
-            </MenuItem>
-            <MenuItem onClick={handleProfileMenuClose}>Your stars</MenuItem>
-            <Divider />
-            <MenuItem onClick={handleProfileMenuClose}>Settings</MenuItem>
-            <MenuItem onClick={handleProfileMenuClose}>Sign out</MenuItem>
-          </Menu>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls="primary-search-account-menu"
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <Avatar
+                  className={classes.avatarSize}
+                  src={session.user.image || ''}
+                />
+                <ArrowDropDownIcon />
+              </IconButton>
+              <Menu
+                id="primary-search-account-menu"
+                anchorEl={profileAnchorEl}
+                getContentAnchorEl={null}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                keepMounted
+                open={Boolean(profileAnchorEl)}
+                onClose={handleProfileMenuClose}
+              >
+                <MenuItem
+                  className={classes.menuHeader}
+                  onClick={handleProfileMenuClose}
+                >
+                  <div>Signed in as</div>
+                  <div>
+                    <strong>test-user</strong>
+                  </div>
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleProfileMenuClose}>
+                  Your profile
+                </MenuItem>
+                <MenuItem onClick={handleProfileMenuClose}>
+                  Your repositories
+                </MenuItem>
+                <MenuItem onClick={handleProfileMenuClose}>Your stars</MenuItem>
+                <Divider />
+                <MenuItem onClick={handleProfileMenuClose}>Settings</MenuItem>
+                <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
+              </Menu>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </nav>
