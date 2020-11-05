@@ -5,20 +5,27 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prisma:introspect": "dotenv -e .env.local -- npx prisma introspect",
+    "prisma:generate": "dotenv -e .env.local -- npx prisma generate",
+    "prisma:studio": "dotenv -e .env.local -- npx prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
+    "@prisma/client": "^2.10.2",
     "clsx": "^1.1.1",
     "date-fns": "^2.16.1",
     "next": "^10.0.1",
+    "next-auth": "^3.1.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
   "devDependencies": {
+    "@prisma/cli": "^2.10.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.12.1",
     "eslint-config-airbnb": "^18.2.0",
