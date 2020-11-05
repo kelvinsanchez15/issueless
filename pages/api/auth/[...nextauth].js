@@ -26,8 +26,13 @@ const options = {
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
   secret: process.env.SECRET,
-  pages: {
-    newUser: '/welcome',
+  pages: { newUser: '/welcome' },
+  callbacks: {
+    session: async (session, user) => {
+      // eslint-disable-next-line no-param-reassign
+      session.userId = user.id;
+      return Promise.resolve(session);
+    },
   },
 };
 
