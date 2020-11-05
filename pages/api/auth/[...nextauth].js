@@ -26,6 +26,9 @@ const options = {
   ],
   adapter: Adapters.Prisma.Adapter({ prisma }),
   secret: process.env.SECRET,
+  pages: {
+    newUser: '/welcome',
+  },
 };
 
 export default (req, res) => NextAuth(req, res, options);
