@@ -3,6 +3,8 @@ DROP TABLE IF EXISTS accounts CASCADE;
 DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS verification_requests CASCADE;
+DROP TABLE IF EXISTS repositories CASCADE;
+DROP TABLE IF EXISTS issues CASCADE;
 
 CREATE TABLE accounts
   (
@@ -40,6 +42,7 @@ CREATE TABLE users
     email_verified TIMESTAMPTZ,
     username       VARCHAR(255),
     image          VARCHAR(255),
+    bio            TEXT,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
@@ -83,3 +86,32 @@ CREATE UNIQUE INDEX token
 -- Extra index
 CREATE UNIQUE INDEX username
   ON users(username);
+
+-- Project schema
+CREATE TABLE repositories
+  (
+    id             SERIAL PRIMARY KEY NOT NULL,
+    name           VARCHAR(255) NOT NULL,
+    description    VARCHAR(255),    
+    created_at     TIMESTAMP NOT NULL DEFAULT NOW(),    
+    owner_id       INTEGER,
+    UNIQUE (name, owner_id)
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,    
+    -- stargazers_count
+    -- watchers_count
+  );
+
+CREATE TABLE issues
+  (
+    id             SERIAL PRIMARY KEY NOT NULL,
+    -- number (ex #105)
+    title          VARCHAR(255) NOT NULL,
+    body           TEXT, 
+    labels         INTEGER[] DEFAULT '{}',
+    created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at     TIMESTAMP NOT NULL DEFAULT NOW(),
+    user_id       INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    repo_id       INTEGER,
+    FOREIGN KEY (repo_id) REFERENCES repositories(id) ON DELETE CASCADE ON UPDATE CASCADE
+  );
