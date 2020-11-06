@@ -10,7 +10,7 @@ const withSession = (handler) => {
       req.session = session;
       return handler(req, res);
     } catch (error) {
-      return res.status(401).json({ error: 'Please authenticate' });
+      return res.status(401).json({ message: 'Please authenticate' });
     }
   };
 };
