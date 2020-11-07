@@ -103,6 +103,7 @@ CREATE TABLE repositories
 
 CREATE TABLE stars  (    
     id             SERIAL PRIMARY KEY NOT NULL,
+    UNIQUE (repository_id, user_id),
     repository_id  INTEGER REFERENCES repositories(id) ON DELETE CASCADE,
     user_id        INTEGER REFERENCES users(id) ON DELETE CASCADE
   );

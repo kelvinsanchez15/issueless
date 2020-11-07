@@ -39,12 +39,13 @@ model Repository {
 }
 
 model Star {
-  id            Int         @id @default(autoincrement())
-  repository_id Int?
-  user_id       Int?
-  repositories  Repository? @relation("repositoriesTostars", fields: [repository_id], references: [id])
-  users         User?       @relation("starsTousers", fields: [user_id], references: [id])
+  id           Int         @id @default(autoincrement())
+  repositoryId Int?        @map("repository_id")
+  userId       Int?        @map("user_id")
+  repositories Repository? @relation("repositoriesTostars", fields: [repositoryId], references: [id])
+  users        User?       @relation("starsTousers", fields: [userId], references: [id])
 
+  @@unique([repositoryId, userId], name: "stars_repository_id_user_id_key")
   @@map("stars")
 }
 
