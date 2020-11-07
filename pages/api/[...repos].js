@@ -36,7 +36,10 @@ export default async function handler(req, res) {
         const repoName = req.query.repos[2];
         const repository = await prisma.user
           .findOne({ where: { username: owner } })
-          .repositories({ where: { name: repoName }, include: { user: true } });
+          .repositories({
+            where: { name: repoName },
+            include: { user: true, stars: true },
+          });
         if (!repository[0].id) {
           res.status(404).json({ message: 'Not found' });
           return;

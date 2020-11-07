@@ -19,6 +19,7 @@ model User {
   updatedAt     DateTime     @default(now()) @updatedAt @map("updated_at")
   issues        Issue[]
   repositories  Repository[]
+  stars         Star[]       @relation("starsTousers")
 
   @@map("users")
 }
@@ -31,9 +32,20 @@ model Repository {
   ownerId     Int?     @map("owner_id")
   user        User?    @relation(fields: [ownerId], references: [id])
   issues      Issue[]
+  stars       Star[]   @relation("repositoriesTostars")
 
   @@unique([name, ownerId], name: "repositories_name_owner_id_key")
   @@map("repositories")
+}
+
+model Star {
+  id            Int         @id @default(autoincrement())
+  repository_id Int?
+  user_id       Int?
+  repositories  Repository? @relation("repositoriesTostars", fields: [repository_id], references: [id])
+  users         User?       @relation("starsTousers", fields: [user_id], references: [id])
+
+  @@map("stars")
 }
 
 model Issue {

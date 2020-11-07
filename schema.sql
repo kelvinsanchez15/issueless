@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS verification_requests CASCADE;
 DROP TABLE IF EXISTS repositories CASCADE;
+DROP TABLE IF EXISTS stars CASCADE;
 DROP TABLE IF EXISTS issues CASCADE;
 
 CREATE TABLE accounts
@@ -95,10 +96,15 @@ CREATE TABLE repositories
     description    VARCHAR(255),    
     created_at     TIMESTAMP NOT NULL DEFAULT NOW(),    
     owner_id       INTEGER,
-    UNIQUE (name, owner_id)
-    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,    
-    -- stargazers_count
+    UNIQUE (name, owner_id),
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE   
     -- watchers_count
+  );
+
+CREATE TABLE stars  (    
+    id             SERIAL PRIMARY KEY NOT NULL,
+    repository_id  INTEGER REFERENCES repositories(id) ON DELETE CASCADE,
+    user_id        INTEGER REFERENCES users(id) ON DELETE CASCADE
   );
 
 CREATE TABLE issues
@@ -110,8 +116,8 @@ CREATE TABLE issues
     labels         INTEGER[] DEFAULT '{}',
     created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at     TIMESTAMP NOT NULL DEFAULT NOW(),
-    user_id       INTEGER,
+    user_id        INTEGER,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    repo_id       INTEGER,
+    repo_id        INTEGER,
     FOREIGN KEY (repo_id) REFERENCES repositories(id) ON DELETE CASCADE ON UPDATE CASCADE
   );
