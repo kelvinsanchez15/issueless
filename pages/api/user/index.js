@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 const handler = async (req, res) => {
   const id = Number(req.session.userId);
+
   switch (req.method) {
     case 'GET':
       try {
