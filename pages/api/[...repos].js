@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         const id = Number(session.userId);
         const { name, description } = req.body;
         if (!name) {
-          res.status(403).json({ message: 'Name is required' });
+          res.status(403).json({ message: '[name] field is required' });
           return;
         }
         const data = {
@@ -31,12 +31,12 @@ export default async function handler(req, res) {
       break;
     case 'GET':
       try {
-        // /api/[username]/[reponame]
-        const username = req.query.repos[1];
-        const reponame = req.query.repos[2];
+        // Get public repo: /api/{owner}]/{repo}
+        const owner = req.query.repos[1];
+        const repoName = req.query.repos[2];
         const repository = await prisma.user
-          .findOne({ where: { username } })
-          .repositories({ where: { name: reponame }, include: { user: true } });
+          .findOne({ where: { username: owner } })
+          .repositories({ where: { name: repoName }, include: { user: true } });
         if (!repository[0].id) {
           res.status(404).json({ message: 'Not found' });
           return;
