@@ -4,12 +4,11 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const handler = async (req, res) => {
-  const id = Number(req.session.userId);
-
+  const userId = Number(req.session.userId);
   switch (req.method) {
     case 'GET':
       try {
-        const user = await prisma.user.findOne({ where: { id } });
+        const user = await prisma.user.findOne({ where: { id: userId } });
         res.json(user);
       } catch (error) {
         res.status(400).json({ message: 'Something went wrong' });
@@ -25,7 +24,7 @@ const handler = async (req, res) => {
           ...(username && { username }),
         };
         const user = await prisma.user.update({
-          where: { id },
+          where: { id: userId },
           data: updates,
         });
         res.json(user);
@@ -37,18 +36,22 @@ const handler = async (req, res) => {
       try {
         const { username, verification } = req.body;
         const user = await prisma.user.findOne({ where: { username } });
-        if (!user || user.id !== id) {
-          throw new Error('Please provide a valid username');
+        if (!user || user.id !== userId) {
+          res.status(400).json({ message: 'Please provide a valid username' });
+          return;
         }
         if (verification !== 'delete my account') {
-          throw new Error('Please provide a valid verification message');
+          res
+            .status(400)
+            .json({ message: 'Please provide a valid verification message' });
+          return;
         }
-        const deletedUser = await prisma.user.delete({ where: { id } });
-        await prisma.session.deleteMany({ where: { userId: id } });
-        await prisma.account.deleteMany({ where: { userId: id } });
+        const deletedUser = await prisma.user.delete({ where: { id: userId } });
+        await prisma.session.deleteMany({ where: { userId } });
+        await prisma.account.deleteMany({ where: { userId } });
         res.json(deletedUser);
       } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: 'Something went wrong' });
       }
       break;
     default:
