@@ -111,14 +111,44 @@ CREATE TABLE stars  (
 CREATE TABLE issues
   (
     id             SERIAL PRIMARY KEY NOT NULL,
-    -- number (ex #105)
+    number         INTEGER,
     title          VARCHAR(255) NOT NULL,
-    body           TEXT, 
-    labels         INTEGER[] DEFAULT '{}',
+    body           TEXT,
+    state          BOOLEAN NOT NULL DEFAULT TRUE,
+    assignee       VARCHAR(255),    
     created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at     TIMESTAMP NOT NULL DEFAULT NOW(),
-    user_id        INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    closed_at      TIMESTAMP,
+    user_id        INTEGER,    
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,    
     repo_id        INTEGER,
+    UNIQUE (number, repo_id),
     FOREIGN KEY (repo_id) REFERENCES repositories(id) ON DELETE CASCADE ON UPDATE CASCADE
   );
+
+-- add labels table
+
+CREATE OR REPLACE FUNCTION issue_number_function()
+RETURNS TRIGGER AS
+$BODY$
+DECLARE
+  max INTEGER:=NULL;
+BEGIN
+  SELECT count(number) INTO max FROM issues WHERE repo_id=NEW.repo_id;
+  IF max IS NULL THEN
+    max:=1;
+  ELSE
+    max=max+1;
+  END IF;
+  NEW.number:=max;
+  RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER issue_number_trigger
+BEFORE INSERT
+ON issues
+FOR EACH ROW
+EXECUTE PROCEDURE issue_number_function();
+
