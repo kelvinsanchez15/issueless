@@ -51,16 +51,20 @@ model Star {
 
 model Issue {
   id           Int         @id @default(autoincrement())
+  number       Int?
   title        String
   body         String?
-  labels       Int[]
+  state        Boolean     @default(true)
+  assignee     String?
   createdAt    DateTime    @default(now()) @map("created_at")
   updatedAt    DateTime    @default(now()) @map("updated_at")
+  closedAt     DateTime?   @map("closed_at")
   userId       Int?        @map("user_id")
   repoId       Int?        @map("repo_id")
   repositories Repository? @relation(fields: [repoId], references: [id])
   user         User?       @relation(fields: [userId], references: [id])
 
+  @@unique([number, repoId], name: "issues_number_repo_id_key")
   @@map("issues")
 }
 
