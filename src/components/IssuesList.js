@@ -18,6 +18,7 @@ import {
   Comment as CommentIcon,
 } from '@material-ui/icons';
 import { formatDistanceToNow } from 'date-fns';
+import Link from 'src/components/Link';
 import IssuesListSubHeader from './IssuesListSubheader';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,9 +39,16 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(0.5),
     },
   },
+  issueLink: {
+    color: theme.palette.text.primary,
+    '&:hover': {
+      color: theme.palette.primary.main,
+      textDecoration: 'none',
+    },
+  },
 }));
 
-export default function IssuesList({ issues }) {
+export default function IssuesList({ issues, username, repoName }) {
   const classes = useStyles();
 
   // Helper functions
@@ -57,12 +65,12 @@ export default function IssuesList({ issues }) {
 
   return (
     <Paper variant="outlined" className={classes.root}>
-      <List subheader={<IssuesListSubHeader />}>
+      <List disablePadding subheader={<IssuesListSubHeader />}>
         <Divider />
         {issues.map((issue) => (
           <ListItem key={issue.id} divider>
             <ListItemIcon>
-              {issue.state === 'open' ? (
+              {issue.state ? (
                 <OpenIssueIcon color="secondary" titleAccess="Open issue" />
               ) : (
                 <ClosedIssueIcon color="error" titleAccess="Clossed issue" />
@@ -70,7 +78,12 @@ export default function IssuesList({ issues }) {
             </ListItemIcon>
             <ListItemText className={classes.listItemText} disableTypography>
               <Typography variant="body1" display="inline">
-                {issue.title}
+                <Link
+                  className={classes.issueLink}
+                  href={`/${username}/${repoName}/issues/${issue.number}`}
+                >
+                  {issue.title}
+                </Link>
               </Typography>
               <span className={classes.labels}>
                 {issue.labels.map((label) => (
@@ -91,13 +104,13 @@ export default function IssuesList({ issues }) {
                 color="textSecondary"
                 display="block"
               >
-                {issue.state === 'open'
+                {issue.state
                   ? `#${issue.number} 
-                    opened ${formatDate(issue.created_at)} 
-                    by ${issue.user.login}`
+                    opened ${formatDate(issue.createdAt)} 
+                    by ${issue.user.username}`
                   : `#${issue.number} 
-                    by ${issue.user.login} 
-                    was closed ${formatDate(issue.closed_at)}`}
+                    by ${issue.user.username} 
+                    was closed ${formatDate(issue.closedAt)}`}
               </Typography>
             </ListItemText>
             <ListItemSecondaryAction>
