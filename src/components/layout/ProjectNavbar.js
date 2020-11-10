@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProjectNavbar() {
+export default function ProjectNavbar({ username, repoName }) {
   const classes = useStyles();
   return (
     <nav>
@@ -34,15 +34,15 @@ export default function ProjectNavbar() {
         <Toolbar>
           <Typography variant="h5">
             <RepoIcon />
-            <Link className={classes.ml1} href="/test-user">
-              freeCodeCamp
+            <Link className={classes.ml1} href={`/${username}`}>
+              {username}
             </Link>
             {' / '}
             <Link
               className={classes.boldLink}
-              href="/test-user/test-project/issues"
+              href={`/${username}/${repoName}/issues`}
             >
-              freeCodeCamp
+              {repoName}
             </Link>
           </Typography>
           <div className={classes.grow} />
