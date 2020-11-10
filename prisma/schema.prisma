@@ -50,42 +50,30 @@ model Star {
 }
 
 model Label {
-  id            Int             @id @default(autoincrement())
-  name          String
-  color         String
-  description   String?
-  labels_issues labels_issues[]
-
-  @@map("labels")
+  id          Int     @id @default(autoincrement())
+  name        String
+  color       String
+  description String?
+  issues      Issue[]
 }
 
 model Issue {
-  id            Int             @id @default(autoincrement())
-  number        Int?
-  title         String
-  body          String?
-  state         Boolean         @default(true)
-  assignee      String?
-  createdAt     DateTime        @default(now()) @map("created_at")
-  updatedAt     DateTime        @default(now()) @map("updated_at")
-  closedAt      DateTime?       @map("closed_at")
-  userId        Int?            @map("user_id")
-  repoId        Int?            @map("repo_id")
-  repositories  Repository?     @relation(fields: [repoId], references: [id])
-  user          User?           @relation(fields: [userId], references: [id])
-  labels_issues labels_issues[] @relation("issuesTolabels_issues")
+  id           Int         @id @default(autoincrement())
+  number       Int?
+  title        String
+  body         String?
+  state        Boolean     @default(true)
+  assignee     String?
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @default(now()) @map("updated_at")
+  closedAt     DateTime?   @map("closed_at")
+  userId       Int?        @map("user_id")
+  repoId       Int?        @map("repo_id")
+  repositories Repository? @relation(fields: [repoId], references: [id])
+  user         User?       @relation(fields: [userId], references: [id])
+  labels       Label[]
 
-  @@unique([number, repoId], name: "issues_number_repo_id_key")
-  @@map("issues")
-}
-
-model labels_issues {
-  labelId Int   @map("label_id")
-  issueId Int   @map("issue_id")
-  issues  Issue @relation("issuesTolabels_issues", fields: [issueId], references: [id])
-  labels  Label @relation(fields: [labelId], references: [id])
-
-  @@id([labelId, issueId])
+  @@unique([number, repoId], name: "Issue_number_repo_id_key")
 }
 
 model Account {

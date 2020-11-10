@@ -5,9 +5,9 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS verification_requests CASCADE;
 DROP TABLE IF EXISTS repositories CASCADE;
 DROP TABLE IF EXISTS stars CASCADE;
-DROP TABLE IF EXISTS labels CASCADE;
-DROP TABLE IF EXISTS issues CASCADE;
-DROP TABLE IF EXISTS labels_issues CASCADE;
+DROP TABLE IF EXISTS "Label" CASCADE;
+DROP TABLE IF EXISTS "Issue" CASCADE;
+DROP TABLE IF EXISTS "_LabelToIssue" CASCADE;
 
 
 CREATE TABLE accounts
@@ -112,7 +112,7 @@ CREATE TABLE stars
     user_id        INTEGER REFERENCES users(id) ON DELETE CASCADE
   );
 
-CREATE TABLE labels
+CREATE TABLE "Label"
   (
     id             SERIAL PRIMARY KEY NOT NULL,
     name           VARCHAR(255) NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE labels
     description    VARCHAR(255) 
   );
 
-CREATE TABLE issues
+CREATE TABLE "Issue"
   (
     id             SERIAL PRIMARY KEY NOT NULL,
     number         INTEGER,
@@ -138,12 +138,19 @@ CREATE TABLE issues
     FOREIGN KEY (repo_id) REFERENCES repositories(id) ON DELETE CASCADE ON UPDATE CASCADE
   );
 
-CREATE TABLE labels_issues
-  (
-    label_id integer REFERENCES labels,
-    issue_id integer REFERENCES issues,
-    PRIMARY KEY (label_id, issue_id)
-  );
+CREATE TABLE "_IssueToLabel" (
+    "A" integer NOT NULL REFERENCES "Issue"(id) ,
+    "B" integer NOT NULL REFERENCES "Label"(id)
+);
+CREATE UNIQUE INDEX "_IssueToLabel_AB_unique" ON "_IssueToLabel"("A" int4_ops,"B" int4_ops);
+CREATE INDEX "_IssueToLabel_B_index" ON "_IssueToLabel"("B" int4_ops);
+
+-- CREATE TABLE labels_issues
+--   (
+--     label_id integer REFERENCES labels,
+--     issue_id integer REFERENCES issues,
+--     PRIMARY KEY (label_id, issue_id)
+--   );
 
 CREATE OR REPLACE FUNCTION issue_number_function()
 RETURNS TRIGGER AS
@@ -151,7 +158,7 @@ $BODY$
 DECLARE
   max INTEGER:=NULL;
 BEGIN
-  SELECT count(number) INTO max FROM issues WHERE repo_id=NEW.repo_id;
+  SELECT count(number) INTO max FROM "Issue" WHERE repo_id=NEW.repo_id;
   IF max IS NULL THEN
     max:=1;
   ELSE
@@ -165,7 +172,7 @@ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER issue_number_trigger
 BEFORE INSERT
-ON issues
+ON "Issue"
 FOR EACH ROW
 EXECUTE PROCEDURE issue_number_function();
 
