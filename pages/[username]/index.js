@@ -35,9 +35,7 @@ export async function getServerSideProps({ query: { username } }) {
       },
     },
   });
-  if (!user) {
-    return { notFound: true };
-  }
+  if (!user) return { notFound: true };
   // Parse dates to avoid serializable error
   user.repositories = user.repositories.map((repository) => {
     const createdAt = repository.createdAt.toISOString();
