@@ -28,7 +28,9 @@ export default function ReposList({ repos, username }) {
           <ListItem key={repo.id} divider>
             <ListItemText disableTypography>
               <Typography variant="h6">
-                <Link href={`/${username}/${repo.name}`}>{repo.name}</Link>
+                <Link href={`/${username}/${repo.name}/issues`}>
+                  {repo.name}
+                </Link>
               </Typography>
               <Typography variant="body1" gutterBottom>
                 {repo.description}
