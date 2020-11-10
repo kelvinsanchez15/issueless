@@ -145,13 +145,6 @@ CREATE TABLE "_IssueToLabel" (
 CREATE UNIQUE INDEX "_IssueToLabel_AB_unique" ON "_IssueToLabel"("A" int4_ops,"B" int4_ops);
 CREATE INDEX "_IssueToLabel_B_index" ON "_IssueToLabel"("B" int4_ops);
 
--- CREATE TABLE labels_issues
---   (
---     label_id integer REFERENCES labels,
---     issue_id integer REFERENCES issues,
---     PRIMARY KEY (label_id, issue_id)
---   );
-
 CREATE OR REPLACE FUNCTION issue_number_function()
 RETURNS TRIGGER AS
 $BODY$
