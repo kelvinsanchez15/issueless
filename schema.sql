@@ -5,7 +5,10 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS verification_requests CASCADE;
 DROP TABLE IF EXISTS repositories CASCADE;
 DROP TABLE IF EXISTS stars CASCADE;
+DROP TABLE IF EXISTS labels CASCADE;
 DROP TABLE IF EXISTS issues CASCADE;
+DROP TABLE IF EXISTS labels_issues CASCADE;
+
 
 CREATE TABLE accounts
   (
@@ -101,11 +104,20 @@ CREATE TABLE repositories
     -- watchers_count
   );
 
-CREATE TABLE stars  (    
+CREATE TABLE stars  
+  (    
     id             SERIAL PRIMARY KEY NOT NULL,
     UNIQUE (repository_id, user_id),
     repository_id  INTEGER REFERENCES repositories(id) ON DELETE CASCADE,
     user_id        INTEGER REFERENCES users(id) ON DELETE CASCADE
+  );
+
+CREATE TABLE labels
+  (
+    id             SERIAL PRIMARY KEY NOT NULL,
+    name           VARCHAR(255) NOT NULL,
+    color          VARCHAR(255) NOT NULL,
+    description    VARCHAR(255) 
   );
 
 CREATE TABLE issues
@@ -126,7 +138,12 @@ CREATE TABLE issues
     FOREIGN KEY (repo_id) REFERENCES repositories(id) ON DELETE CASCADE ON UPDATE CASCADE
   );
 
--- add labels table
+CREATE TABLE labels_issues
+  (
+    label_id integer REFERENCES labels,
+    issue_id integer REFERENCES issues,
+    PRIMARY KEY (label_id, issue_id)
+  );
 
 CREATE OR REPLACE FUNCTION issue_number_function()
 RETURNS TRIGGER AS
