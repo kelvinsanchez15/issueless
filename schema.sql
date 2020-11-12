@@ -7,7 +7,8 @@ DROP TABLE IF EXISTS repositories CASCADE;
 DROP TABLE IF EXISTS stars CASCADE;
 DROP TABLE IF EXISTS "Label" CASCADE;
 DROP TABLE IF EXISTS "Issue" CASCADE;
-DROP TABLE IF EXISTS "_LabelToIssue" CASCADE;
+DROP TABLE IF EXISTS "_IssueToLabel" CASCADE;
+DROP TYPE IF EXISTS "State" CASCADE;
 
 
 CREATE TABLE accounts
@@ -120,13 +121,15 @@ CREATE TABLE "Label"
     description    VARCHAR(255) 
   );
 
+CREATE TYPE "State" AS ENUM('open','closed');
+
 CREATE TABLE "Issue"
   (
     id             SERIAL PRIMARY KEY NOT NULL,
     number         INTEGER,
     title          VARCHAR(255) NOT NULL,
     body           TEXT,
-    state          BOOLEAN NOT NULL DEFAULT TRUE,
+    state          "State" NOT NULL DEFAULT 'open',
     assignee       VARCHAR(255),    
     created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at     TIMESTAMP NOT NULL DEFAULT NOW(),

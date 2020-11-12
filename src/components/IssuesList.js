@@ -70,7 +70,7 @@ export default function IssuesList({ issues, username, repoName }) {
         {issues.map((issue) => (
           <ListItem key={issue.id} divider>
             <ListItemIcon>
-              {issue.state ? (
+              {issue.state === 'open' ? (
                 <OpenIssueIcon color="secondary" titleAccess="Open issue" />
               ) : (
                 <ClosedIssueIcon color="error" titleAccess="Clossed issue" />
@@ -104,7 +104,7 @@ export default function IssuesList({ issues, username, repoName }) {
                 color="textSecondary"
                 display="block"
               >
-                {issue.state
+                {issue.state === 'open'
                   ? `#${issue.number} 
                     opened ${formatDate(issue.createdAt)} 
                     by ${issue.user.username}`
