@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProjectNavbar({ username, repoName }) {
+export default function ProjectNavbar({ repository, username, repoName }) {
   const classes = useStyles();
   return (
     <nav>

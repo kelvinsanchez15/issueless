@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -48,8 +49,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function IssuesList({ issues, username, repoName }) {
+export default function IssuesList({ repository }) {
   const classes = useStyles();
+  const router = useRouter();
+  const { pathname, query } = router;
 
   // Helper functions
   const formatDate = (date) =>
@@ -65,9 +68,19 @@ export default function IssuesList({ issues, username, repoName }) {
 
   return (
     <Paper variant="outlined" className={classes.root}>
-      <List disablePadding subheader={<IssuesListSubHeader />}>
+      <List
+        disablePadding
+        subheader={
+          // eslint-disable-next-line react/jsx-wrap-multilines
+          <IssuesListSubHeader
+            repository={repository}
+            pathname={pathname}
+            query={query}
+          />
+        }
+      >
         <Divider />
-        {issues.map((issue) => (
+        {repository.issues.map((issue) => (
           <ListItem key={issue.id} divider>
             <ListItemIcon>
               {issue.state === 'open' ? (
@@ -80,7 +93,14 @@ export default function IssuesList({ issues, username, repoName }) {
               <Typography variant="body1" display="inline">
                 <Link
                   className={classes.issueLink}
-                  href={`/${username}/${repoName}/issues/${issue.number}`}
+                  href={{
+                    pathname: `${pathname}/[issue]`,
+                    query: {
+                      username: query.username,
+                      repo: query.repo,
+                      issue: issue.number,
+                    },
+                  }}
                 >
                   {issue.title}
                 </Link>

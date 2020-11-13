@@ -5,6 +5,8 @@ import {
   CheckCircleOutline as ClosedIssueIcon,
   ArrowDropDown as ArrowDropDownIcon,
 } from '@material-ui/icons';
+import Link from 'src/components/Link';
+import SortDropdown from 'src/components/issues/SortDropdown';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -13,19 +15,39 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function IssuesListSubHeader() {
+export default function IssuesListSubHeader({ repository, pathname, query }) {
   const classes = useStyles();
   return (
     <ListSubheader component="div" className={classes.root} inset disableSticky>
       <div>
-        <Button startIcon={<OpenIssueIcon />}>301 Open</Button>
-        <Button startIcon={<ClosedIssueIcon />}>39,345 Closed</Button>
+        <Button
+          href={{
+            pathname,
+            query: { ...query, state: 'open' },
+          }}
+          component={Link}
+          style={{ textDecoration: 'none' }}
+          startIcon={<OpenIssueIcon />}
+        >
+          {`${repository.openIssuesCount} Open`}
+        </Button>
+        <Button
+          href={{
+            pathname,
+            query: { ...query, state: 'closed' },
+          }}
+          component={Link}
+          style={{ textDecoration: 'none' }}
+          startIcon={<ClosedIssueIcon />}
+        >
+          {`${repository.closedIssuesCount} Closed`}
+        </Button>
       </div>
       <div>
         <Button endIcon={<ArrowDropDownIcon />}>Author</Button>
         <Button endIcon={<ArrowDropDownIcon />}>Label</Button>
         <Button endIcon={<ArrowDropDownIcon />}>Assignee</Button>
-        <Button endIcon={<ArrowDropDownIcon />}>Sort</Button>
+        <SortDropdown pathname={pathname} query={query} />
       </div>
     </ListSubheader>
   );
