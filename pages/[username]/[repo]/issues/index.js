@@ -28,8 +28,30 @@ const useStyles = makeStyles((theme) => ({
 const prisma = new PrismaClient();
 
 export async function getServerSideProps({
-  query: { username, repo: repoName },
+  params: { username, repo: repoName },
+  query: { author, label, assignee, state, sort },
 }) {
+  // Filter
+  const filter = {
+    // GET /issues?author=kelvin123
+    ...(author && { user: { username: author } }),
+    // GET /issues?label=bug
+    ...(label && { labels: { some: { name: label } } }),
+    // GET /issues?assignee=mathew159
+    ...(assignee && { assignee: { username: assignee } }),
+    // GET /issues?state=open
+    ...(state && { state }),
+  };
+  // Sorter
+  const sorter = {};
+  // GET /issues?sort=createdAt:asc || GET /issues?sort=updatedAt:desc
+  if (sort) {
+    const parts = sort.split(':');
+    // eslint-disable-next-line prefer-destructuring
+    sorter[parts[0]] = parts[1];
+  } else {
+    sorter.createdAt = 'desc';
+  }
   const owner = await prisma.user.findOne({
     where: { username },
     select: { id: true },
@@ -47,10 +69,18 @@ export async function getServerSideProps({
           user: { select: { username: true, id: true, image: true } },
           labels: true,
         },
+        where: filter,
+        orderBy: sorter,
       },
     },
   });
   if (!repository) return { notFound: true };
+  repository.openIssuesCount = await prisma.issue.count({
+    where: { repoId: repository.id, state: 'open' },
+  });
+  repository.closedIssuesCount = await prisma.issue.count({
+    where: { repoId: repository.id, state: 'closed' },
+  });
   // Parse dates to avoid serializable error
   repository.issues = repository.issues.map((issue) => {
     const createdAt = issue.createdAt.toISOString();
@@ -70,7 +100,11 @@ export default function Issues({ repository, username, repoName }) {
         <title>{`Issues · ${username}/${repoName}`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ProjectNavbar username={username} repoName={repoName} />
+      <ProjectNavbar
+        repository={repository}
+        username={username}
+        repoName={repoName}
+      />
       <Container className={classes.root}>
         <div className={classes.filterAndButtons}>
           <IssuesFilter />
@@ -85,7 +119,7 @@ export default function Issues({ repository, username, repoName }) {
           </div>
         </div>
         <IssuesList
-          issues={repository.issues}
+          repository={repository}
           username={username}
           repoName={repoName}
         />
