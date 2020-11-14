@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
-import IssuesList from 'src/components/IssuesList';
-import IssuesFilter from 'src/components/IssuesFilter';
+import IssuesList from 'src/components/issues/IssuesList';
+import IssuesFilter from 'src/components/issues/IssuesFilter';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Button, Chip } from '@material-ui/core';
 import { LocalOfferOutlined as LabelIcon } from '@material-ui/icons';
