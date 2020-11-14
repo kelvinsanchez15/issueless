@@ -41,7 +41,7 @@ export default function SortDropdown({ pathname, query }) {
         aria-label="Sort by"
         aria-controls="sort-issues"
         aria-haspopup="true"
-        title="sort"
+        title="Sort"
         onClick={handleMenuOpen}
         endIcon={<ArrowDropDownIcon />}
       >
