@@ -29,7 +29,7 @@ const prisma = new PrismaClient();
 
 export async function getServerSideProps({
   params: { username, repo: repoName },
-  query: { author, label, assignee, state, sort },
+  query: { author, label, assignee, state, sort, page = 1, limit },
 }) {
   // Filter
   const filter = {
@@ -52,6 +52,10 @@ export async function getServerSideProps({
   } else {
     sorter.createdAt = 'desc';
   }
+  // Pagination
+  const take = limit || 15;
+  const skip = (page - 1) * take;
+
   const owner = await prisma.user.findOne({
     where: { username },
     select: { id: true },
@@ -65,6 +69,8 @@ export async function getServerSideProps({
       id: true,
       name: true,
       issues: {
+        take,
+        skip,
         include: {
           user: { select: { username: true, id: true, image: true } },
           labels: true,
@@ -75,12 +81,17 @@ export async function getServerSideProps({
     },
   });
   if (!repository) return { notFound: true };
+  // Counts
+  const issuesCount = await prisma.issue.count({
+    where: { ...filter, repositories: { name: repoName, ownerId: owner.id } },
+  });
   repository.openIssuesCount = await prisma.issue.count({
     where: { repoId: repository.id, state: 'open' },
   });
   repository.closedIssuesCount = await prisma.issue.count({
     where: { repoId: repository.id, state: 'closed' },
   });
+  repository.totalPages = Math.ceil(issuesCount / take);
   // Parse dates to avoid serializable error
   repository.issues = repository.issues.map((issue) => {
     const createdAt = issue.createdAt.toISOString();
