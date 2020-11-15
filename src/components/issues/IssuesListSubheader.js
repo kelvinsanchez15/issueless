@@ -3,12 +3,12 @@ import { ListSubheader, Button } from '@material-ui/core';
 import {
   ErrorOutlineOutlined as OpenIssueIcon,
   CheckCircleOutline as ClosedIssueIcon,
-  ArrowDropDown as ArrowDropDownIcon,
 } from '@material-ui/icons';
 import Link from 'src/components/Link';
 import SortDropdown from 'src/components/issues/SortDropdown';
 import AuthorDropdown from 'src/components/issues/AuthorDropdown';
 import AssigneeDropdown from 'src/components/issues/AssigneeDropdown';
+import LabelDropdown from './LabelDropdown';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -47,7 +47,7 @@ export default function IssuesListSubHeader({ repository, pathname, query }) {
       </div>
       <div>
         <AuthorDropdown pathname={pathname} query={query} />
-        <Button endIcon={<ArrowDropDownIcon />}>Label</Button>
+        <LabelDropdown pathname={pathname} query={query} />
         <AssigneeDropdown pathname={pathname} query={query} />
         <SortDropdown pathname={pathname} query={query} />
       </div>
