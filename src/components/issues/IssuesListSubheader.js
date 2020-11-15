@@ -7,6 +7,8 @@ import {
 } from '@material-ui/icons';
 import Link from 'src/components/Link';
 import SortDropdown from 'src/components/issues/SortDropdown';
+import AuthorDropdown from 'src/components/issues/AuthorDropdown';
+import AssigneeDropdown from 'src/components/issues/AssigneeDropdown';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -44,9 +46,9 @@ export default function IssuesListSubHeader({ repository, pathname, query }) {
         </Button>
       </div>
       <div>
-        <Button endIcon={<ArrowDropDownIcon />}>Author</Button>
+        <AuthorDropdown pathname={pathname} query={query} />
         <Button endIcon={<ArrowDropDownIcon />}>Label</Button>
-        <Button endIcon={<ArrowDropDownIcon />}>Assignee</Button>
+        <AssigneeDropdown pathname={pathname} query={query} />
         <SortDropdown pathname={pathname} query={query} />
       </div>
     </ListSubheader>
