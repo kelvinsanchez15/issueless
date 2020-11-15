@@ -122,7 +122,7 @@ export default function Issues({ repository, username, repoName }) {
           <div className={classes.buttonsWraper}>
             <Button variant="outlined" startIcon={<LabelIcon />}>
               Labels
-              <Chip className={classes.ml1} label={16} size="small" />
+              <Chip className={classes.ml1} label={9} size="small" />
             </Button>
             <Button color="secondary" variant="contained">
               New Issue
