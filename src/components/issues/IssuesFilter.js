@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, fade } from '@material-ui/core/styles';
 import { Paper, Button, InputBase, Divider } from '@material-ui/core';
 import {
   ArrowDropDown as ArrowDropDownIcon,
@@ -9,14 +9,15 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
+  filterButton: {
+    borderRadius: 0,
+  },
   search: {
     position: 'relative',
-    borderRadius: theme.shape.borderRadius,
     marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
+    width: 'auto',
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.1),
     },
   },
   searchIcon: {
@@ -50,7 +51,9 @@ export default function IssuesFilter() {
   const classes = useStyles();
   return (
     <Paper className={classes.root} variant="outlined">
-      <Button endIcon={<ArrowDropDownIcon />}>Filters</Button>
+      <Button className={classes.filterButton} endIcon={<ArrowDropDownIcon />}>
+        Filters
+      </Button>
 
       <Divider orientation="vertical" />
 
