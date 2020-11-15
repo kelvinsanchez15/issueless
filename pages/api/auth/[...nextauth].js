@@ -29,8 +29,8 @@ const options = {
   pages: { newUser: '/welcome' },
   callbacks: {
     session: async (session, user) => {
-      // eslint-disable-next-line no-param-reassign
       session.userId = user.id;
+      session.username = user.username;
       return Promise.resolve(session);
     },
   },
