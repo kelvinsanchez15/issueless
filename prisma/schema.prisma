@@ -57,11 +57,6 @@ model Label {
   issues      Issue[]
 }
 
-enum State {
-  open
-  closed
-}
-
 model Issue {
   id           Int         @id @default(autoincrement())
   number       Int?
@@ -121,4 +116,9 @@ model VerificationRequest {
   updatedAt  DateTime @default(now()) @map("updated_at")
 
   @@map("verification_requests")
+}
+
+enum State {
+  open
+  closed
 }
