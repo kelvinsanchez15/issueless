@@ -21,9 +21,9 @@ CREATE TABLE accounts
     provider_account_id  VARCHAR(255) NOT NULL,
     refresh_token        TEXT,
     access_token         TEXT,
-    access_token_expires TIMESTAMPTZ,
-    created_at           TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at           TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    access_token_expires TIMESTAMP,
+    created_at           TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at           TIMESTAMP NOT NULL DEFAULT NOW(),
     PRIMARY KEY (id)
   );
 
@@ -31,11 +31,11 @@ CREATE TABLE sessions
   (
     id            SERIAL,
     user_id       INTEGER NOT NULL,
-    expires       TIMESTAMPTZ NOT NULL,
+    expires       TIMESTAMP NOT NULL,
     session_token VARCHAR(255) NOT NULL,
     access_token  VARCHAR(255) NOT NULL,
-    created_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at    TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at    TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at    TIMESTAMP NOT NULL DEFAULT NOW(),
     PRIMARY KEY (id)
   );
 
@@ -44,12 +44,12 @@ CREATE TABLE users
     id             SERIAL,
     name           VARCHAR(255),
     email          VARCHAR(255),
-    email_verified TIMESTAMPTZ,
+    email_verified TIMESTAMP,
     username       VARCHAR(255),
     image          VARCHAR(255),
     bio            TEXT,
-    created_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at     TIMESTAMP NOT NULL DEFAULT NOW(),
     PRIMARY KEY (id)
   );
 
@@ -58,9 +58,9 @@ CREATE TABLE verification_requests
     id         SERIAL,
     identifier VARCHAR(255) NOT NULL,
     token      VARCHAR(255) NOT NULL,
-    expires    TIMESTAMPTZ NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires    TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(), 
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(), 
     PRIMARY KEY (id)
   );
 
