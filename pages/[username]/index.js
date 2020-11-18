@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Container, Button, Grid } from '@material-ui/core';
 import { BookOutlined as RepoIcon } from '@material-ui/icons';
 import { PrismaClient } from '@prisma/client';
+import Link from 'src/components/Link';
 import UserProfile from 'src/components/UserProfile';
 import ReposList from 'src/components/ReposList';
 
@@ -65,6 +66,9 @@ export default function User({ username, user }) {
                 startIcon={<RepoIcon />}
                 color="secondary"
                 variant="contained"
+                href="/new"
+                component={Link}
+                naked
               >
                 New
               </Button>
