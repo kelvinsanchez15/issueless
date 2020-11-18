@@ -35,4 +35,4 @@ yarn-error.log*
 
 # custom
 schemaToModel.sql
-/pages/api/seed.js
+# /pages/api/seed.js
