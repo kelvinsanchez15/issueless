@@ -2,13 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { Provider } from 'next-auth/client';
+import { LinearProgress } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from 'src/components/styles/theme';
 import Navbar from 'src/components/layout/Navbar';
+import useRouterLoading from 'src/hooks/useRouterLoading';
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
+  const loading = useRouterLoading();
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -30,6 +33,9 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         <Provider session={pageProps.session}>
           <CssBaseline />
+          {loading && (
+            <LinearProgress style={{ position: 'absolute', width: '100%' }} />
+          )}
           <Navbar />
           <Component {...pageProps} />
         </Provider>
