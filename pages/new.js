@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { Formik, Form, Field } from 'formik';
@@ -48,8 +48,15 @@ const useStyles = makeStyles((theme) => ({
 export default function NewRepository() {
   const classes = useStyles();
   const router = useRouter();
-  const [session] = useSession();
+  const [session, loading] = useSession();
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
+
+  // if logged out, redirect to the homepage
+  useEffect(() => {
+    if (!loading && !session) {
+      router.replace('/signin');
+    }
+  }, [session, loading, router]);
 
   return (
     <>
