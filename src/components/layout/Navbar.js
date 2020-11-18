@@ -123,7 +123,13 @@ export default function Navbar() {
           <div className={classes.grow} />
 
           {!session ? (
-            <Button variant="contained" color="primary" href="/api/auth/signin">
+            <Button
+              component={Link}
+              variant="contained"
+              color="primary"
+              href="/signin"
+              naked
+            >
               Sign in
             </Button>
           ) : (
