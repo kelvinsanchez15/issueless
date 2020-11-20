@@ -118,6 +118,7 @@ export default function NewRepository() {
                   name="name"
                   label="Repository name *"
                   helperText=" "
+                  autoFocus
                   inputProps={{
                     autoComplete: 'off',
                   }}
