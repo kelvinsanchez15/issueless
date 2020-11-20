@@ -51,7 +51,7 @@ export default function NewRepository() {
   const [session, loading] = useSession();
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
 
-  // if logged out, redirect to the homepage
+  // if logged out, redirect to signin page
   useEffect(() => {
     if (!loading && !session) {
       router.replace('/signin');
