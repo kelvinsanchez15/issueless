@@ -1,9 +1,9 @@
-import { getSession } from 'next-auth/client';
+import withSession from 'src/utils/withSession';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export default async function handler(req, res) {
+const handler = async (req, res) => {
   if (!req.method === 'POST') {
     res.status(405).json({
       message: `The HTTP ${req.method} method is not supported at this route.`,
@@ -11,12 +11,7 @@ export default async function handler(req, res) {
     return;
   }
   try {
-    const session = await getSession({ req });
-    if (!session) {
-      res.status(401).json({ message: 'Please authenticate' });
-      return;
-    }
-    const userId = Number(session.userId);
+    const userId = Number(req.session.userId);
     const { name, description } = req.body;
     if (!name) {
       res.status(403).json({ message: '[name] field is required' });
@@ -32,4 +27,6 @@ export default async function handler(req, res) {
   } catch (error) {
     res.status(400).json({ message: 'Something went wrong' });
   }
-}
+};
+
+export default withSession(handler);
