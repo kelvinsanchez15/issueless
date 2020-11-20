@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { getSession } from 'next-auth/client';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import * as Yup from 'yup';
@@ -73,7 +74,7 @@ export default function LoginPage() {
             validationSchema={Yup.object({
               username: Yup.string().trim().strict(true).required('Required'),
             })}
-            onSubmit={async (values, { setSubmitting, resetForm }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               setErrorAlert(false);
               try {
                 const { username } = values;
@@ -87,8 +88,8 @@ export default function LoginPage() {
                   const { error } = await res.json();
                   throw new Error(error);
                 }
-                router.push(`/${username}`);
-                resetForm();
+                await getSession();
+                router.replace(`/${username}`);
                 setSubmitting(false);
               } catch (error) {
                 setErrorAlert(true);
