@@ -1,11 +1,12 @@
 import Head from 'next/head';
-import ProjectNavbar from 'src/components/layout/ProjectNavbar';
-import IssuesList from 'src/components/issues/IssuesList';
-import IssuesFilter from 'src/components/issues/IssuesFilter';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Button, Chip } from '@material-ui/core';
 import { LocalOfferOutlined as LabelIcon } from '@material-ui/icons';
 import { PrismaClient } from '@prisma/client';
+import Link from 'src/components/Link';
+import ProjectNavbar from 'src/components/layout/ProjectNavbar';
+import IssuesList from 'src/components/issues/IssuesList';
+import IssuesFilter from 'src/components/issues/IssuesFilter';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -124,7 +125,13 @@ export default function Issues({ repository, username, repoName }) {
               Labels
               <Chip className={classes.ml1} label={9} size="small" />
             </Button>
-            <Button color="secondary" variant="contained">
+            <Button
+              color="secondary"
+              variant="contained"
+              component={Link}
+              href={`/${username}/${repoName}/issues/new`}
+              naked
+            >
               New Issue
             </Button>
           </div>
