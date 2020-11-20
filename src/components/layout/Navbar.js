@@ -196,19 +196,24 @@ export default function Navbar() {
               >
                 <MenuItem
                   className={classes.menuHeader}
+                  href={`/${session.username}`}
+                  component={Link}
+                  naked
                   onClick={handleProfileMenuClose}
                 >
                   <div>Signed in as</div>
                   <div>
-                    <strong>test-user</strong>
+                    <strong>{session.username}</strong>
                   </div>
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={handleProfileMenuClose}>
+                <MenuItem
+                  href={`/${session.username}`}
+                  component={Link}
+                  naked
+                  onClick={handleProfileMenuClose}
+                >
                   Your profile
-                </MenuItem>
-                <MenuItem onClick={handleProfileMenuClose}>
-                  Your repositories
                 </MenuItem>
                 <MenuItem onClick={handleProfileMenuClose}>Your stars</MenuItem>
                 <Divider />
