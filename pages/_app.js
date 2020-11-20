@@ -9,8 +9,7 @@ import theme from 'src/components/styles/theme';
 import Navbar from 'src/components/layout/Navbar';
 import useRouterLoading from 'src/hooks/useRouterLoading';
 
-export default function MyApp(props) {
-  const { Component, pageProps } = props;
+export default function MyApp({ Component, pageProps }) {
   const loading = useRouterLoading();
 
   React.useEffect(() => {
@@ -36,7 +35,7 @@ export default function MyApp(props) {
           {loading && (
             <LinearProgress style={{ position: 'absolute', width: '100%' }} />
           )}
-          <Navbar />
+          <Navbar {...pageProps} />
           <Component {...pageProps} />
         </Provider>
       </ThemeProvider>
