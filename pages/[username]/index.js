@@ -23,7 +23,19 @@ const useStyles = makeStyles((theme) => ({
 
 const prisma = new PrismaClient();
 
-export async function getServerSideProps({ query: { username } }) {
+export async function getStaticPaths() {
+  const users = await prisma.user.findMany({
+    select: { username: true },
+  });
+  const paths = users.map((user) => ({ params: { username: user.username } }));
+
+  return {
+    paths,
+    fallback: 'blocking',
+  };
+}
+
+export async function getStaticProps({ params: { username } }) {
   const user = await prisma.user.findOne({
     where: { username },
     select: {
@@ -36,19 +48,23 @@ export async function getServerSideProps({ query: { username } }) {
       },
     },
   });
-  if (!user) return { notFound: true };
   // Parse dates to avoid serializable error
-  user.repositories = user.repositories.map((repository) => {
-    const createdAt = repository.createdAt.toISOString();
-    return { ...repository, createdAt };
-  });
+  if (user) {
+    user.repositories = user.repositories.map((repository) => {
+      const createdAt = repository.createdAt.toISOString();
+      return { ...repository, createdAt };
+    });
+  }
   return {
-    props: { username, user },
+    props: { user },
+    revalidate: 2,
+    notFound: !user,
   };
 }
 
-export default function User({ username, user }) {
+export default function User({ user }) {
   const classes = useStyles();
+
   return (
     <>
       <Head>
@@ -73,7 +89,7 @@ export default function User({ username, user }) {
                 New
               </Button>
             </div>
-            <ReposList repos={user.repositories} username={username} />
+            <ReposList repos={user.repositories} username={user.username} />
           </Grid>
         </Grid>
       </Container>

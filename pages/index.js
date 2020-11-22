@@ -30,13 +30,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const users = await prisma.user.findMany({
     select: { id: true, name: true, username: true, bio: true, image: true },
   });
   if (!users) return { notFound: true };
   return {
     props: { users },
+    revalidate: 2,
   };
 }
 
@@ -50,7 +51,6 @@ export default function Home({ users }) {
       </Head>
 
       <Container>
-        <div>PLACE HOLDER HOME PAGE</div>
         <Paper className={classes.root}>
           <List disablePadding>
             <Divider />
