@@ -24,42 +24,51 @@ const useStyles = makeStyles((theme) => ({
 const prisma = new PrismaClient();
 
 export async function getStaticPaths() {
-  const users = await prisma.user.findMany({
-    select: { username: true },
-  });
-  const paths = users.map((user) => ({ params: { username: user.username } }));
-
-  return {
-    paths,
-    fallback: 'blocking',
-  };
+  try {
+    const users = await prisma.user.findMany({
+      select: { username: true },
+    });
+    const paths = users.map((user) => ({
+      params: { username: user.username },
+    }));
+    return {
+      paths,
+      fallback: 'blocking',
+    };
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
 export async function getStaticProps({ params: { username } }) {
-  const user = await prisma.user.findOne({
-    where: { username },
-    select: {
-      image: true,
-      name: true,
-      username: true,
-      bio: true,
-      repositories: {
-        select: { id: true, name: true, description: true, createdAt: true },
+  try {
+    const user = await prisma.user.findOne({
+      where: { username },
+      select: {
+        image: true,
+        name: true,
+        username: true,
+        bio: true,
+        repositories: {
+          select: { id: true, name: true, description: true, createdAt: true },
+        },
       },
-    },
-  });
-  // Parse dates to avoid serializable error
-  if (user) {
-    user.repositories = user.repositories.map((repository) => {
-      const createdAt = repository.createdAt.toISOString();
-      return { ...repository, createdAt };
     });
+    // Parse dates to avoid serializable error
+    if (user) {
+      user.repositories = user.repositories.map((repository) => {
+        const createdAt = repository.createdAt.toISOString();
+        return { ...repository, createdAt };
+      });
+    }
+    return {
+      props: { user },
+      revalidate: 2,
+      notFound: !user,
+    };
+  } finally {
+    await prisma.$disconnect();
   }
-  return {
-    props: { user },
-    revalidate: 2,
-    notFound: !user,
-  };
 }
 
 export default function User({ user }) {

@@ -14,8 +14,6 @@ import {
 } from '@material-ui/core';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
-
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(4),
@@ -30,15 +28,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const prisma = new PrismaClient();
+
 export async function getStaticProps() {
-  const users = await prisma.user.findMany({
-    select: { id: true, name: true, username: true, bio: true, image: true },
-  });
-  if (!users) return { notFound: true };
-  return {
-    props: { users },
-    revalidate: 2,
-  };
+  try {
+    const users = await prisma.user.findMany({
+      select: { id: true, name: true, username: true, bio: true, image: true },
+    });
+    if (!users) return { notFound: true };
+    return {
+      props: { users },
+      revalidate: 2,
+    };
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
 export default function Home({ users }) {
