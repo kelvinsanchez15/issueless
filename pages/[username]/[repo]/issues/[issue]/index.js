@@ -136,20 +136,6 @@ export default function Issue({ issue, username, repoName }) {
         <Container className={classes.root}>
           <div className={classes.headerAndButtonsWrapper}>
             <Typography variant="h5">
-              {issue.state === 'open' ? (
-                <Chip
-                  icon={<OpenIssueIcon titleAccess="Open issue" />}
-                  label="Open"
-                  color="secondary"
-                  className={classes.openIssueChip}
-                />
-              ) : (
-                <Chip
-                  icon={<ClosedIssueIcon titleAccess="Clossed issue" />}
-                  label="Closed"
-                  className={classes.closedIssueChip}
-                />
-              )}
               {issue.title}
               <Typography variant="h5" component="span" color="textSecondary">
                 {` #${issue.number}`}
@@ -170,6 +156,20 @@ export default function Issue({ issue, username, repoName }) {
           </div>
 
           <Typography variant="h6" gutterBottom>
+            {issue.state === 'open' ? (
+              <Chip
+                icon={<OpenIssueIcon titleAccess="Open issue" />}
+                label="Open"
+                color="secondary"
+                className={classes.openIssueChip}
+              />
+            ) : (
+              <Chip
+                icon={<ClosedIssueIcon titleAccess="Clossed issue" />}
+                label="Closed"
+                className={classes.closedIssueChip}
+              />
+            )}
             {`${issue.user.username} opened this issue 
           ${formatDate(issue.createdAt)}`}
           </Typography>
