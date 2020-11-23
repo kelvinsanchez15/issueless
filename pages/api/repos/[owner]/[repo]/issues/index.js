@@ -33,9 +33,6 @@ const handler = async (req, res) => {
         },
       },
     };
-    // const issue = await prisma.issue.create({
-    //   data: { ...data, labels: { connect: [{ id: 28 }, { id: 29 }] } },
-    // });
     const issue = await prisma.issue.create({ data });
     res.status(201).json(issue);
   } catch (error) {
