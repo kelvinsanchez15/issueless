@@ -26,6 +26,11 @@ const theme = responsiveFontSizes(
           backgroundColor: '#1F1F1F',
         },
       },
+      MuiButton: {
+        outlined: {
+          padding: '6px 16px',
+        },
+      },
     },
   })
 );
