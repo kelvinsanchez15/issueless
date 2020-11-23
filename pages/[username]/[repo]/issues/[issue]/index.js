@@ -8,8 +8,6 @@ import {
   IconButton,
   Avatar,
   Typography,
-  Chip,
-  Divider,
   Grid,
   List,
   ListItem,
@@ -18,8 +16,6 @@ import {
   Button,
 } from '@material-ui/core';
 import {
-  ErrorOutlineOutlined as OpenIssueIcon,
-  CheckCircleOutline as ClosedIssueIcon,
   DeleteOutline as DeleteIcon,
   SettingsOutlined as SettingsIcon,
   MoreHoriz as MoreHorizIcon,
@@ -27,31 +23,12 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { PrismaClient } from '@prisma/client';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
-import Link from 'src/components/Link';
 import NewComment from 'src/components/issues/issue/NewComment';
+import IssueHeader from 'src/components/issues/issue/IssueHeader';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
-  },
-  openIssueChip: {
-    marginRight: theme.spacing(0.5),
-  },
-  closedIssueChip: {
-    marginRight: theme.spacing(0.5),
-    backgroundColor: theme.palette.error.dark,
-  },
-  cardHeader: {
-    backgroundColor: theme.palette.grey.A400,
-  },
-  headerAndButtonsWrapper: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  buttonsWraper: {
-    '& > *': {
-      marginLeft: theme.spacing(2),
-    },
   },
 }));
 
@@ -134,47 +111,7 @@ export default function Issue({ issue, username, repoName }) {
       <>
         <ProjectNavbar username={username} repoName={repoName} />
         <Container className={classes.root}>
-          <div className={classes.headerAndButtonsWrapper}>
-            <Typography variant="h5">
-              {issue.title}
-              <Typography variant="h5" component="span" color="textSecondary">
-                {` #${issue.number}`}
-              </Typography>
-            </Typography>
-            <div className={classes.buttonsWraper}>
-              <Button variant="outlined">Edit</Button>
-              <Button
-                color="secondary"
-                variant="contained"
-                component={Link}
-                href={`/${username}/${repoName}/issues/new`}
-                naked
-              >
-                New Issue
-              </Button>
-            </div>
-          </div>
-
-          <Typography variant="h6" gutterBottom>
-            {issue.state === 'open' ? (
-              <Chip
-                icon={<OpenIssueIcon titleAccess="Open issue" />}
-                label="Open"
-                color="secondary"
-                className={classes.openIssueChip}
-              />
-            ) : (
-              <Chip
-                icon={<ClosedIssueIcon titleAccess="Clossed issue" />}
-                label="Closed"
-                className={classes.closedIssueChip}
-              />
-            )}
-            {`${issue.user.username} opened this issue 
-          ${formatDate(issue.createdAt)}`}
-          </Typography>
-
-          <Divider />
+          <IssueHeader issue={issue} />
 
           <Grid className={classes.root} container spacing={2}>
             <Grid item xs={9}>
