@@ -5,22 +5,34 @@ import {
   Card,
   CardHeader,
   CardContent,
+  IconButton,
   Avatar,
   Typography,
   Chip,
   Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  Button,
 } from '@material-ui/core';
 import {
   ErrorOutlineOutlined as OpenIssueIcon,
   CheckCircleOutline as ClosedIssueIcon,
+  DeleteOutline as DeleteIcon,
+  SettingsOutlined as SettingsIcon,
+  MoreHoriz as MoreHorizIcon,
 } from '@material-ui/icons';
 import { formatDistanceToNow } from 'date-fns';
 import { PrismaClient } from '@prisma/client';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
+import Link from 'src/components/Link';
+import NewComment from 'src/components/issues/issue/NewComment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(2),
   },
   openIssueChip: {
     marginRight: theme.spacing(0.5),
@@ -28,6 +40,18 @@ const useStyles = makeStyles((theme) => ({
   closedIssueChip: {
     marginRight: theme.spacing(0.5),
     backgroundColor: theme.palette.error.dark,
+  },
+  cardHeader: {
+    backgroundColor: theme.palette.grey.A400,
+  },
+  headerAndButtonsWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  buttonsWraper: {
+    '& > *': {
+      marginLeft: theme.spacing(2),
+    },
   },
 }));
 
@@ -110,26 +134,40 @@ export default function Issue({ issue, username, repoName }) {
       <>
         <ProjectNavbar username={username} repoName={repoName} />
         <Container className={classes.root}>
-          <Typography variant="h5" gutterBottom>
-            {issue.state === 'open' ? (
-              <Chip
-                icon={<OpenIssueIcon titleAccess="Open issue" />}
-                label="Open"
-                color="secondary"
-                className={classes.openIssueChip}
-              />
-            ) : (
-              <Chip
-                icon={<ClosedIssueIcon titleAccess="Clossed issue" />}
-                label="Closed"
-                className={classes.closedIssueChip}
-              />
-            )}
-            {issue.title}
-            <Typography variant="h5" component="span" color="textSecondary">
-              {` #${issue.number}`}
+          <div className={classes.headerAndButtonsWrapper}>
+            <Typography variant="h5">
+              {issue.state === 'open' ? (
+                <Chip
+                  icon={<OpenIssueIcon titleAccess="Open issue" />}
+                  label="Open"
+                  color="secondary"
+                  className={classes.openIssueChip}
+                />
+              ) : (
+                <Chip
+                  icon={<ClosedIssueIcon titleAccess="Clossed issue" />}
+                  label="Closed"
+                  className={classes.closedIssueChip}
+                />
+              )}
+              {issue.title}
+              <Typography variant="h5" component="span" color="textSecondary">
+                {` #${issue.number}`}
+              </Typography>
             </Typography>
-          </Typography>
+            <div className={classes.buttonsWraper}>
+              <Button variant="outlined">Edit</Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                component={Link}
+                href={`/${username}/${repoName}/issues/new`}
+                naked
+              >
+                New Issue
+              </Button>
+            </div>
+          </div>
 
           <Typography variant="h6" gutterBottom>
             {`${issue.user.username} opened this issue 
@@ -138,18 +176,63 @@ export default function Issue({ issue, username, repoName }) {
 
           <Divider />
 
-          <Card className={classes.root}>
-            <CardHeader
-              avatar={<Avatar src={issue.user.image} aria-label="user image" />}
-              title={`${issue.user.username} commented 
+          <Grid className={classes.root} container spacing={2}>
+            <Grid item xs={9}>
+              <Card>
+                <CardHeader
+                  className={classes.cardHeader}
+                  avatar={
+                    <Avatar src={issue.user.image} aria-label="user image" />
+                  }
+                  action={
+                    // eslint-disable-next-line react/jsx-wrap-multilines
+                    <IconButton aria-label="settings">
+                      <MoreHorizIcon />
+                    </IconButton>
+                  }
+                  title={`${issue.user.username} commented 
             ${formatDate(issue.createdAt)}`}
-            />
-            <CardContent>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {issue.body}
-              </Typography>
-            </CardContent>
-          </Card>
+                />
+                <CardContent>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    {issue.body ? issue.body : 'No description provided.'}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <NewComment />
+            </Grid>
+
+            <Grid item xs={3}>
+              <List disablePadding>
+                <ListItem divider>
+                  <ListItemText
+                    primary="Assignees"
+                    secondary="No one assigned"
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="select assignees">
+                      <SettingsIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem divider>
+                  <ListItemText primary="Labels" secondary="None yet" />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="select labels">
+                      <SettingsIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem>
+                  <Button startIcon={<DeleteIcon />}>Delete issue</Button>
+                </ListItem>
+              </List>
+            </Grid>
+          </Grid>
         </Container>
       </>
     </>
