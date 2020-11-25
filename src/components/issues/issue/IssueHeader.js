@@ -147,7 +147,7 @@ export default function IssueHeader({ issue }) {
         </div>
       )}
 
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="subtitle1" color="textSecondary" gutterBottom>
         {issue.state === 'open' ? (
           <Chip
             icon={<OpenIssueIcon titleAccess="Open issue" />}
@@ -162,8 +162,8 @@ export default function IssueHeader({ issue }) {
             className={classes.closedIssueChip}
           />
         )}
-        {`${issue.user.username} opened this issue 
-          ${formatDate(issue.createdAt)}`}
+        <strong>{issue.user.username}</strong>
+        {` opened this issue ${formatDate(issue.createdAt)}`}
       </Typography>
 
       <Snackbar open={errorAlert.open} autoHideDuration={300}>
