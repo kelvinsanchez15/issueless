@@ -131,11 +131,7 @@ export default function Issue({ issue, username, repoName }) {
             ${formatDate(issue.createdAt)}`}
                 />
                 <CardContent>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
+                  <Typography paragraph style={{ whiteSpace: 'pre-wrap' }}>
                     {issue.body ? issue.body : 'No description provided.'}
                   </Typography>
                 </CardContent>
