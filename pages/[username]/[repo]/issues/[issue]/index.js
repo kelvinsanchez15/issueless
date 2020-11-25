@@ -2,12 +2,7 @@ import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
-  Card,
-  CardHeader,
-  CardContent,
   IconButton,
-  Avatar,
-  Typography,
   Grid,
   List,
   ListItem,
@@ -18,13 +13,12 @@ import {
 import {
   DeleteOutline as DeleteIcon,
   SettingsOutlined as SettingsIcon,
-  MoreHoriz as MoreHorizIcon,
 } from '@material-ui/icons';
-import { formatDistanceToNow } from 'date-fns';
 import { PrismaClient } from '@prisma/client';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
-import NewComment from 'src/components/issues/issue/NewComment';
 import IssueHeader from 'src/components/issues/issue/IssueHeader';
+import IssueComment from 'src/components/issues/issue/IssueComment';
+import NewComment from 'src/components/issues/issue/NewComment';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,9 +93,6 @@ export async function getStaticProps({
 export default function Issue({ issue, username, repoName }) {
   const classes = useStyles();
 
-  const formatDate = (date) =>
-    formatDistanceToNow(new Date(date), { addSuffix: true });
-
   return (
     <>
       <Head>
@@ -115,27 +106,7 @@ export default function Issue({ issue, username, repoName }) {
 
           <Grid className={classes.root} container spacing={2}>
             <Grid item xs={9}>
-              <Card>
-                <CardHeader
-                  className={classes.cardHeader}
-                  avatar={
-                    <Avatar src={issue.user.image} aria-label="user image" />
-                  }
-                  action={
-                    // eslint-disable-next-line react/jsx-wrap-multilines
-                    <IconButton aria-label="settings">
-                      <MoreHorizIcon />
-                    </IconButton>
-                  }
-                  title={`${issue.user.username} commented 
-            ${formatDate(issue.createdAt)}`}
-                />
-                <CardContent>
-                  <Typography paragraph style={{ whiteSpace: 'pre-wrap' }}>
-                    {issue.body ? issue.body : 'No description provided.'}
-                  </Typography>
-                </CardContent>
-              </Card>
+              <IssueComment issue={issue} />
               <NewComment />
             </Grid>
 
