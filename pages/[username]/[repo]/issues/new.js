@@ -190,7 +190,7 @@ export default function NewIssue() {
                         horizontal: 'left',
                       },
                       getContentAnchorEl: null,
-                      disableAutoFocusItem: false,
+                      disableAutoFocusItem: true,
                     }}
                     renderValue={(selected) => (
                       <div className={classes.labels}>
