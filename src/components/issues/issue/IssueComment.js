@@ -26,10 +26,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function IssueComment({ issue }) {
+export default function IssueComment({
+  body = 'No description provided.',
+  number,
+  createdAt,
+  username,
+  image,
+}) {
   const classes = useStyles();
   const router = useRouter();
-  const { username, repo: repoName } = router.query;
+  const { username: owner, repo: repoName } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [showComment, setShowComment] = useState(true);
 
@@ -40,7 +46,7 @@ export default function IssueComment({ issue }) {
           <>
             <CardHeader
               className={classes.cardHeader}
-              avatar={<Avatar src={issue.user.image} aria-label="user image" />}
+              avatar={<Avatar src={image} aria-label="user image" />}
               action={
                 // eslint-disable-next-line react/jsx-wrap-multilines
                 <IconButton
@@ -54,23 +60,21 @@ export default function IssueComment({ issue }) {
               title={
                 // eslint-disable-next-line react/jsx-wrap-multilines
                 <Typography>
-                  <strong>{issue.user.username}</strong>
-                  {` commented ${formatDate(issue.createdAt)}`}
+                  <strong>{username}</strong>
+                  {` commented ${formatDate(createdAt)}`}
                 </Typography>
               }
-              //     title={`${issue.user.username} commented
-              // ${formatDate(issue.createdAt)}`}
             />
             <CardContent>
               <Typography paragraph style={{ whiteSpace: 'pre-wrap' }}>
-                {issue.body ? issue.body : 'No description provided.'}
+                {body}
               </Typography>
             </CardContent>
           </>
         ) : (
           <>
             <Formik
-              initialValues={{ body: issue.body }}
+              initialValues={{ body }}
               validationSchema={Yup.object({
                 body: Yup.string(),
               })}
@@ -78,7 +82,7 @@ export default function IssueComment({ issue }) {
                 setErrorAlert({ ...errorAlert, open: false });
                 try {
                   const res = await fetch(
-                    `/api/repos/${username}/${repoName}/issues/${issue.number}`,
+                    `/api/repos/${owner}/${repoName}/issues/${number}`,
                     {
                       method: 'PATCH',
                       headers: { 'Content-Type': 'application/json' },
@@ -105,9 +109,7 @@ export default function IssueComment({ issue }) {
                 <Form onSubmit={handleSubmit} className={classes.form}>
                   <CardHeader
                     className={classes.cardHeader}
-                    avatar={
-                      <Avatar src={issue.user.image} aria-label="user image" />
-                    }
+                    avatar={<Avatar src={image} aria-label="user image" />}
                     title="Make your changes below"
                   />
                   <CardContent>

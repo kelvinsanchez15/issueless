@@ -133,11 +133,23 @@ export default function Issue({ issue, username, repoName }) {
       <>
         <ProjectNavbar username={username} repoName={repoName} />
         <Container className={classes.root}>
-          <IssueHeader issue={issue} />
+          <IssueHeader
+            title={issue.title}
+            number={issue.number}
+            state={issue.state}
+            createdAt={issue.createdAt}
+            username={issue.user.username}
+          />
 
           <Grid className={classes.root} container spacing={2}>
             <Grid item xs={9}>
-              <IssueComment issue={issue} />
+              <IssueComment
+                body={issue.body || undefined}
+                number={issue.number}
+                createdAt={issue.createdAt}
+                username={issue.user.username}
+                image={issue.user.image}
+              />
               <NewComment />
             </Grid>
 

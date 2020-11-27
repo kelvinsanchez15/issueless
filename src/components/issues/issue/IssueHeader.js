@@ -41,10 +41,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function IssueHeader({ issue }) {
+export default function IssueHeader({
+  title,
+  number,
+  state,
+  createdAt,
+  username,
+}) {
   const classes = useStyles();
   const router = useRouter();
-  const { username, repo: repoName } = router.query;
+  const { username: owner, repo: repoName } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [showHeader, setShowHeader] = useState(true);
 
@@ -53,9 +59,9 @@ export default function IssueHeader({ issue }) {
       {showHeader ? (
         <div className={classes.headerShow}>
           <Typography variant="h5">
-            {issue.title}
+            {title}
             <Typography variant="h5" component="span" color="textSecondary">
-              {` #${issue.number}`}
+              {` #${number}`}
             </Typography>
           </Typography>
           <div className={classes.headerActions}>
@@ -66,7 +72,7 @@ export default function IssueHeader({ issue }) {
               color="secondary"
               variant="contained"
               component={Link}
-              href={`/${username}/${repoName}/issues/new`}
+              href={`/${owner}/${repoName}/issues/new`}
               naked
             >
               New Issue
@@ -76,7 +82,7 @@ export default function IssueHeader({ issue }) {
       ) : (
         <div className={classes.headerEdit}>
           <Formik
-            initialValues={{ title: issue.title }}
+            initialValues={{ title }}
             validationSchema={Yup.object({
               title: Yup.string().required('Required'),
             })}
@@ -84,7 +90,7 @@ export default function IssueHeader({ issue }) {
               setErrorAlert({ ...errorAlert, open: false });
               try {
                 const res = await fetch(
-                  `/api/repos/${username}/${repoName}/issues/${issue.number}`,
+                  `/api/repos/${owner}/${repoName}/issues/${number}`,
                   {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
@@ -145,7 +151,7 @@ export default function IssueHeader({ issue }) {
       )}
 
       <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-        {issue.state === 'open' ? (
+        {state === 'open' ? (
           <Chip
             icon={<OpenIssueIcon titleAccess="Open issue" />}
             label="Open"
@@ -159,8 +165,8 @@ export default function IssueHeader({ issue }) {
             className={classes.closedIssueChip}
           />
         )}
-        <strong>{issue.user.username}</strong>
-        {` opened this issue ${formatDate(issue.createdAt)}`}
+        <strong>{username}</strong>
+        {` opened this issue ${formatDate(createdAt)}`}
       </Typography>
 
       <Snackbar open={errorAlert.open} autoHideDuration={300}>
