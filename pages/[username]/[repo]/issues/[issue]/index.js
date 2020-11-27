@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
@@ -9,7 +11,9 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Button,
+  Snackbar,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import {
   DeleteOutline as DeleteIcon,
   SettingsOutlined as SettingsIcon,
@@ -92,6 +96,33 @@ export async function getStaticProps({
 
 export default function Issue({ issue, username, repoName }) {
   const classes = useStyles();
+  const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
+  const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
+
+  const handleIssueDelete = async () => {
+    setErrorAlert({ ...errorAlert, open: false });
+    try {
+      const res = await fetch(
+        `/api/repos/${username}/${repoName}/issues/${issue.number}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      setSubmitting(false);
+      if (!res.ok) {
+        const { message } = await res.json();
+        throw new Error(message);
+      }
+      router.replace(`/${username}/${repoName}/issues`);
+    } catch (error) {
+      setErrorAlert({
+        ...errorAlert,
+        open: true,
+        message: error.message,
+      });
+    }
+  };
 
   return (
     <>
@@ -132,11 +163,21 @@ export default function Issue({ issue, username, repoName }) {
                   </ListItemSecondaryAction>
                 </ListItem>
                 <ListItem>
-                  <Button startIcon={<DeleteIcon />}>Delete issue</Button>
+                  <Button
+                    onClick={handleIssueDelete}
+                    disabled={submitting}
+                    startIcon={<DeleteIcon />}
+                  >
+                    Delete issue
+                  </Button>
                 </ListItem>
               </List>
             </Grid>
           </Grid>
+
+          <Snackbar open={errorAlert.open} autoHideDuration={300}>
+            <Alert severity="error">{errorAlert.message}</Alert>
+          </Snackbar>
         </Container>
       </>
     </>
