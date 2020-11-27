@@ -23,6 +23,7 @@ import Alert from '@material-ui/lab/Alert';
 import { useSession } from 'next-auth/client';
 import useSWR from 'swr';
 import fetcher from 'src/utils/fetcher';
+import getContrastYIQ from 'src/utils/getContrastYIQ';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -80,14 +81,6 @@ export default function NewIssue() {
       router.replace('/signin');
     }
   }, [session, loading, router]);
-
-  const getContrastYIQ = (hexColor) => {
-    const r = parseInt(hexColor.substr(0, 2), 16);
-    const g = parseInt(hexColor.substr(2, 2), 16);
-    const b = parseInt(hexColor.substr(4, 2), 16);
-    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 128 ? '#000' : '#fff';
-  };
 
   return (
     <>

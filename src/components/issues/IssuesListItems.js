@@ -17,6 +17,7 @@ import {
 } from '@material-ui/icons';
 import Link from 'src/components/Link';
 import formatDate from 'src/utils/formatDate';
+import getContrastYIQ from 'src/utils/getContrastYIQ';
 
 const useStyles = makeStyles((theme) => ({
   listItemText: {
@@ -43,13 +44,6 @@ export default function IssuesListItems({ repository }) {
   const router = useRouter();
   const { pathname, query } = router;
 
-  const getContrastYIQ = (hexColor) => {
-    const r = parseInt(hexColor.substr(0, 2), 16);
-    const g = parseInt(hexColor.substr(2, 2), 16);
-    const b = parseInt(hexColor.substr(4, 2), 16);
-    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 128 ? '#000' : '#fff';
-  };
   return (
     <>
       {repository.issues.map((issue) => (
