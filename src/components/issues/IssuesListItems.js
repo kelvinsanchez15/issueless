@@ -15,8 +15,8 @@ import {
   CheckCircleOutline as ClosedIssueIcon,
   Comment as CommentIcon,
 } from '@material-ui/icons';
-import { formatDistanceToNow } from 'date-fns';
 import Link from 'src/components/Link';
+import formatDate from 'src/utils/formatDate';
 
 const useStyles = makeStyles((theme) => ({
   listItemText: {
@@ -42,10 +42,6 @@ export default function IssuesListItems({ repository }) {
   const classes = useStyles();
   const router = useRouter();
   const { pathname, query } = router;
-
-  // Helper functions
-  const formatDate = (date) =>
-    formatDistanceToNow(new Date(date), { addSuffix: true });
 
   const getContrastYIQ = (hexColor) => {
     const r = parseInt(hexColor.substr(0, 2), 16);

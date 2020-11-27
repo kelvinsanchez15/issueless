@@ -10,8 +10,8 @@ import {
   CheckCircleOutline as ClosedIssueIcon,
 } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
-import { formatDistanceToNow } from 'date-fns';
 import Link from 'src/components/Link';
+import formatDate from 'src/utils/formatDate';
 
 const useStyles = makeStyles((theme) => ({
   openIssueChip: {
@@ -47,9 +47,6 @@ export default function IssueHeader({ issue }) {
   const { username, repo: repoName } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [showHeader, setShowHeader] = useState(true);
-
-  const formatDate = (date) =>
-    formatDistanceToNow(new Date(date), { addSuffix: true });
 
   return (
     <div>

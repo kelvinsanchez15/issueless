@@ -15,7 +15,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { Edit as EditIcon } from '@material-ui/icons';
-import { formatDistanceToNow } from 'date-fns';
+import formatDate from 'src/utils/formatDate';
 
 const useStyles = makeStyles((theme) => ({
   cardHeader: {
@@ -32,9 +32,6 @@ export default function IssueComment({ issue }) {
   const { username, repo: repoName } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [showComment, setShowComment] = useState(true);
-
-  const formatDate = (date) =>
-    formatDistanceToNow(new Date(date), { addSuffix: true });
 
   return (
     <>

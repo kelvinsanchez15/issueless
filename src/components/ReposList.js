@@ -7,8 +7,8 @@ import {
   ListItemText,
   Typography,
 } from '@material-ui/core';
-import { formatDistanceToNow } from 'date-fns';
 import Link from 'src/components/Link';
+import formatDate from 'src/utils/formatDate';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,8 +18,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ReposList({ repos, username }) {
   const classes = useStyles();
-  const formatDate = (date) =>
-    formatDistanceToNow(new Date(date), { addSuffix: true });
   return (
     <Paper className={classes.root}>
       <List disablePadding>
