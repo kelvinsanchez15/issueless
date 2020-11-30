@@ -7,9 +7,9 @@ DROP TABLE IF EXISTS repositories CASCADE;
 DROP TABLE IF EXISTS stars CASCADE;
 DROP TABLE IF EXISTS "Label" CASCADE;
 DROP TABLE IF EXISTS "Issue" CASCADE;
+DROP TABLE IF EXISTS "Comment" CASCADE;
 DROP TABLE IF EXISTS "_IssueToLabel" CASCADE;
 DROP TYPE IF EXISTS "State" CASCADE;
-
 
 CREATE TABLE accounts
   (
@@ -147,6 +147,18 @@ CREATE TABLE "_IssueToLabel" (
 );
 CREATE UNIQUE INDEX "_IssueToLabel_AB_unique" ON "_IssueToLabel"("A" int4_ops,"B" int4_ops);
 CREATE INDEX "_IssueToLabel_B_index" ON "_IssueToLabel"("B" int4_ops);
+
+CREATE TABLE "Comment"
+  (
+    id             SERIAL PRIMARY KEY NOT NULL,
+    body           TEXT NOT NULL,
+    created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at     TIMESTAMP NOT NULL DEFAULT NOW(),
+    user_id        INTEGER,    
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,  
+    issue_id       INTEGER,
+    FOREIGN KEY (issue_id) REFERENCES "Issue"(id) ON DELETE CASCADE ON UPDATE CASCADE
+  );
 
 CREATE OR REPLACE FUNCTION issue_number_function()
 RETURNS TRIGGER AS

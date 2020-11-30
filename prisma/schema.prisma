@@ -17,6 +17,7 @@ model User {
   bio           String?
   createdAt     DateTime     @default(now()) @map("created_at")
   updatedAt     DateTime     @default(now()) @updatedAt @map("updated_at")
+  comments      Comment[]    @relation("CommentTousers")
   issues        Issue[]
   repositories  Repository[]
   stars         Star[]       @relation("starsTousers")
@@ -71,9 +72,21 @@ model Issue {
   repoId       Int?        @map("repo_id")
   repositories Repository? @relation(fields: [repoId], references: [id])
   user         User?       @relation(fields: [userId], references: [id])
+  comments     Comment[]
   labels       Label[]
 
   @@unique([number, repoId], name: "Issue_number_repo_id_key")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  body      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  userId    Int?     @map("user_id")
+  issueId   Int?     @map("issue_id")
+  issue     Issue?   @relation(fields: [issueId], references: [id])
+  user      User?    @relation("CommentTousers", fields: [userId], references: [id])
 }
 
 model Account {
