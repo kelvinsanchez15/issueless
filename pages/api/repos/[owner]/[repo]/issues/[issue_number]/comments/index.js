@@ -42,6 +42,7 @@ export default async function handler(req, res) {
         const issue = await getIssueByQuery(query, prisma);
         const comments = await prisma.comment.findMany({
           where: { issueId: issue.id },
+          include: { user: { select: { username: true, image: true } } },
         });
         res.json(comments);
       } catch (error) {
