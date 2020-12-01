@@ -12,6 +12,7 @@ import {
   ListItemSecondaryAction,
   Button,
   Snackbar,
+  StepConnector,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import {
@@ -22,6 +23,7 @@ import { PrismaClient } from '@prisma/client';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
 import IssueHeader from 'src/components/issues/issue/IssueHeader';
 import IssueComment from 'src/components/issues/issue/IssueComment';
+import IssueCommentList from 'src/components/issues/issue/IssueCommentList';
 import NewComment from 'src/components/issues/issue/NewComment';
 
 const useStyles = makeStyles((theme) => ({
@@ -145,11 +147,12 @@ export default function Issue({ issue, username, repoName }) {
             <Grid item xs={9}>
               <IssueComment
                 body={issue.body || undefined}
-                number={issue.number}
                 createdAt={issue.createdAt}
                 username={issue.user.username}
                 image={issue.user.image}
               />
+              <StepConnector orientation="vertical" />
+              <IssueCommentList />
               <NewComment />
             </Grid>
 
