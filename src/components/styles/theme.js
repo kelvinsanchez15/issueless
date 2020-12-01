@@ -30,6 +30,14 @@ const theme = responsiveFontSizes(
           padding: '6px 16px',
         },
       },
+      MuiStepConnector: {
+        vertical: {
+          padding: 0,
+        },
+        line: {
+          borderColor: 'rgba(255, 255, 255, 0.12)',
+        },
+      },
     },
   })
 );
