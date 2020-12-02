@@ -13,16 +13,15 @@ export default function IssueCommentList() {
   return (
     <>
       {comments?.map((comment) => (
-        <>
+        <div key={comment.id}>
           <IssueComment
-            key={comment.id}
             body={comment.body}
             createdAt={comment.createdAt}
             username={comment.user.username}
             image={comment.user.image}
           />
           <StepConnector orientation="vertical" />
-        </>
+        </div>
       ))}
       <Divider />
     </>
