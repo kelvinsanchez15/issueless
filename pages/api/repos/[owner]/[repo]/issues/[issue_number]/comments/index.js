@@ -43,6 +43,7 @@ export default async function handler(req, res) {
         const comments = await prisma.comment.findMany({
           where: { issueId: issue.id },
           include: { user: { select: { username: true, image: true } } },
+          orderBy: { createdAt: 'asc' },
         });
         res.json(comments);
       } catch (error) {
