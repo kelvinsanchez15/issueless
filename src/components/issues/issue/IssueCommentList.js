@@ -15,6 +15,7 @@ export default function IssueCommentList() {
       {comments?.map((comment) => (
         <div key={comment.id}>
           <IssueComment
+            commentId={comment.id}
             body={comment.body}
             createdAt={comment.createdAt}
             username={comment.user.username}

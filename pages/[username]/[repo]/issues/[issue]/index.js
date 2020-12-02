@@ -20,9 +20,10 @@ import {
   SettingsOutlined as SettingsIcon,
 } from '@material-ui/icons';
 import { PrismaClient } from '@prisma/client';
+import { useSession } from 'next-auth/client';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
 import IssueHeader from 'src/components/issues/issue/IssueHeader';
-import IssueComment from 'src/components/issues/issue/IssueComment';
+import IssueDetails from 'src/components/issues/issue/IssueDetails';
 import IssueCommentList from 'src/components/issues/issue/IssueCommentList';
 import NewComment from 'src/components/issues/issue/NewComment';
 
@@ -101,6 +102,9 @@ export default function Issue({ issue, username, repoName }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
+  const [session] = useSession();
+  const userHasValidSession = Boolean(session);
+  const issueBelongToUser = session?.username === username;
 
   const handleIssueDelete = async () => {
     setErrorAlert({ ...errorAlert, open: false });
@@ -141,19 +145,25 @@ export default function Issue({ issue, username, repoName }) {
             state={issue.state}
             createdAt={issue.createdAt}
             username={issue.user.username}
+            userHasValidSession={userHasValidSession}
+            issueBelongToUser={issueBelongToUser}
           />
 
           <Grid className={classes.root} container spacing={2}>
             <Grid item xs={9}>
-              <IssueComment
+              <IssueDetails
                 body={issue.body || undefined}
                 createdAt={issue.createdAt}
                 username={issue.user.username}
                 image={issue.user.image}
+                userHasValidSession={userHasValidSession}
+                issueBelongToUser={issueBelongToUser}
               />
               <StepConnector orientation="vertical" />
               <IssueCommentList />
-              <NewComment />
+              {userHasValidSession && (
+                <NewComment state={issue.state} image={session?.user.image} />
+              )}
             </Grid>
 
             <Grid item xs={3}>
@@ -177,15 +187,17 @@ export default function Issue({ issue, username, repoName }) {
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
-                <ListItem>
-                  <Button
-                    onClick={handleIssueDelete}
-                    disabled={submitting}
-                    startIcon={<DeleteIcon />}
-                  >
-                    Delete issue
-                  </Button>
-                </ListItem>
+                {userHasValidSession && issueBelongToUser && (
+                  <ListItem>
+                    <Button
+                      onClick={handleIssueDelete}
+                      disabled={submitting}
+                      startIcon={<DeleteIcon />}
+                    >
+                      Delete issue
+                    </Button>
+                  </ListItem>
+                )}
               </List>
             </Grid>
           </Grid>

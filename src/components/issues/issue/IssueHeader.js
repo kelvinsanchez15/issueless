@@ -47,6 +47,8 @@ export default function IssueHeader({
   state,
   createdAt,
   username,
+  userHasValidSession,
+  issueBelongToUser,
 }) {
   const classes = useStyles();
   const router = useRouter();
@@ -65,9 +67,11 @@ export default function IssueHeader({
             </Typography>
           </Typography>
           <div className={classes.headerActions}>
-            <Button variant="outlined" onClick={() => setShowHeader(false)}>
-              Edit
-            </Button>
+            {userHasValidSession && issueBelongToUser && (
+              <Button variant="outlined" onClick={() => setShowHeader(false)}>
+                Edit
+              </Button>
+            )}
             <Button
               color="secondary"
               variant="contained"

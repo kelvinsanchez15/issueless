@@ -13,7 +13,9 @@ import {
   Typography,
   CardActions,
   Button,
+  Snackbar,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { Edit as EditIcon } from '@material-ui/icons';
 import formatDate from 'src/utils/formatDate';
 import { useSession } from 'next-auth/client';
@@ -27,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function IssueComment({
-  commentId,
+export default function IssueDetails({
   body = 'No description provided.',
   number,
   createdAt,
@@ -42,7 +43,7 @@ export default function IssueComment({
   const [showComment, setShowComment] = useState(true);
   const [session] = useSession();
   const userHasValidSession = Boolean(session);
-  const isCommentOwnerOrRepoOwner =
+  const isIssueOwnerOrRepoOwner =
     session?.username === username || session?.username === owner;
 
   return (
@@ -55,7 +56,7 @@ export default function IssueComment({
               avatar={<Avatar src={image} aria-label="user image" />}
               action={
                 userHasValidSession &&
-                isCommentOwnerOrRepoOwner && (
+                isIssueOwnerOrRepoOwner && (
                   <IconButton
                     onClick={() => setShowComment(false)}
                     aria-label="settings"
@@ -90,7 +91,7 @@ export default function IssueComment({
                 setErrorAlert({ ...errorAlert, open: false });
                 try {
                   const res = await fetch(
-                    `/api/repos/${owner}/${repoName}/issues/${number}/comments/${commentId}`,
+                    `/api/repos/${owner}/${repoName}/issues/${number}`,
                     {
                       method: 'PATCH',
                       headers: { 'Content-Type': 'application/json' },
@@ -159,6 +160,10 @@ export default function IssueComment({
           </>
         )}
       </Card>
+
+      <Snackbar open={errorAlert.open} autoHideDuration={300}>
+        <Alert severity="error">{errorAlert.message}</Alert>
+      </Snackbar>
     </>
   );
 }
