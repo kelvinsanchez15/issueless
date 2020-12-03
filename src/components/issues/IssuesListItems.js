@@ -60,11 +60,11 @@ export default function IssuesListItems({ repository }) {
               <Link
                 className={classes.issueLink}
                 href={{
-                  pathname: `${pathname}/[issue]`,
+                  pathname: `${pathname}/[issue_number]`,
                   query: {
-                    username: query.username,
+                    owner: query.owner,
                     repo: query.repo,
-                    issue: issue.number,
+                    issue_number: issue.number,
                   },
                 }}
               >
