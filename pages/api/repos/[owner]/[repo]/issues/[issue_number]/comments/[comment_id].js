@@ -17,7 +17,7 @@ const handler = async (req, res) => {
   }
   const commentOwner = comment.user.username;
 
-  // Only allow update and delete actions access to comment owner or repo owner
+  // Allow only the comment owner or repo owner permission to update and delete comments
   if (!(loggedUser === commentOwner || loggedUser === repoOwner)) {
     res.status(403).json({ message: 'Forbidden' });
     return;
