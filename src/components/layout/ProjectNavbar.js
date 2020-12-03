@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProjectNavbar({ repository, username, repoName }) {
+export default function ProjectNavbar({ owner, repoName }) {
   const classes = useStyles();
   return (
     <nav>
@@ -34,13 +34,13 @@ export default function ProjectNavbar({ repository, username, repoName }) {
         <Toolbar>
           <Typography variant="h5">
             <RepoIcon />
-            <Link className={classes.ml1} href={`/${username}`}>
-              {username}
+            <Link className={classes.ml1} href={`/${owner}`}>
+              {owner}
             </Link>
             {' / '}
             <Link
               className={classes.boldLink}
-              href={`/${username}/${repoName}/issues`}
+              href={`/${owner}/${repoName}/issues`}
             >
               {repoName}
             </Link>

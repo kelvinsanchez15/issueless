@@ -29,7 +29,7 @@ export async function getStaticPaths() {
       select: { username: true },
     });
     const paths = users.map((user) => ({
-      params: { username: user.username },
+      params: { owner: user.username },
     }));
     return {
       paths,
@@ -40,10 +40,10 @@ export async function getStaticPaths() {
   }
 }
 
-export async function getStaticProps({ params: { username } }) {
+export async function getStaticProps({ params: { owner } }) {
   try {
     const user = await prisma.user.findOne({
-      where: { username },
+      where: { username: owner },
       select: {
         image: true,
         name: true,

@@ -67,11 +67,11 @@ const useStyles = makeStyles((theme) => ({
 export default function NewIssue() {
   const classes = useStyles();
   const router = useRouter();
-  const { username, repo: repoName } = router.query;
+  const { owner, repo: repoName } = router.query;
   const [session, loading] = useSession();
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const { data: labelsData } = useSWR(
-    `/api/repos/${username}/${repoName}/labels`,
+    `/api/repos/${owner}/${repoName}/labels`,
     fetcher
   );
 
@@ -85,7 +85,7 @@ export default function NewIssue() {
   return (
     <>
       <Head>
-        <title>{`New Issue · ${username}/${repoName}`}</title>
+        <title>{`New Issue · ${owner}/${repoName}`}</title>
       </Head>
 
       <Container maxWidth="sm" component="main">
@@ -116,7 +116,7 @@ export default function NewIssue() {
               };
               try {
                 const res = await fetch(
-                  `/api/repos/${username}/${repoName}/issues`,
+                  `/api/repos/${owner}/${repoName}/issues`,
                   {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -129,7 +129,7 @@ export default function NewIssue() {
                   throw new Error(message);
                 }
                 const { number } = await res.json();
-                router.replace(`/${username}/${repoName}/issues/${number}`);
+                router.replace(`/${owner}/${repoName}/issues/${number}`);
                 resetForm();
               } catch (error) {
                 setErrorAlert({

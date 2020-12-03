@@ -46,7 +46,7 @@ export async function getStaticPaths() {
     });
     const paths = issues.map((issue) => ({
       params: {
-        username: issue.repositories.user.username,
+        owner: issue.repositories.user.username,
         repo: issue.repositories.name,
         issue_number: String(issue.number),
       },
@@ -61,17 +61,17 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({
-  params: { username, repo: repoName, issue_number: issueNumber },
+  params: { owner, repo: repoName, issue_number: issueNumber },
 }) {
   try {
-    const owner = await prisma.user.findOne({
-      where: { username },
+    const user = await prisma.user.findOne({
+      where: { username: owner },
       select: { id: true },
     });
-    if (!owner) return { notFound: true };
+    if (!user) return { notFound: true };
     const repository = await prisma.repository.findOne({
       where: {
-        repositories_name_owner_id_key: { name: repoName, ownerId: owner.id },
+        repositories_name_owner_id_key: { name: repoName, ownerId: user.id },
       },
     });
     if (!repository) return { notFound: true };
@@ -89,7 +89,7 @@ export async function getStaticProps({
     issue.createdAt = issue.createdAt.toISOString();
     issue.updatedAt = issue.updatedAt.toISOString();
     return {
-      props: { issue, username, repoName },
+      props: { issue, owner, repoName },
       revalidate: 2,
     };
   } finally {
@@ -97,20 +97,20 @@ export async function getStaticProps({
   }
 }
 
-export default function Issue({ issue, username, repoName }) {
+export default function Issue({ issue, owner, repoName }) {
   const classes = useStyles();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [session] = useSession();
   const userHasValidSession = Boolean(session);
-  const issueBelongToUser = session?.username === username;
+  const issueBelongToUser = session?.username === owner;
 
   const handleIssueDelete = async () => {
     setErrorAlert({ ...errorAlert, open: false });
     try {
       const res = await fetch(
-        `/api/repos/${username}/${repoName}/issues/${issue.number}`,
+        `/api/repos/${owner}/${repoName}/issues/${issue.number}`,
         {
           method: 'DELETE',
         }
@@ -120,7 +120,7 @@ export default function Issue({ issue, username, repoName }) {
         const { message } = await res.json();
         throw new Error(message);
       }
-      router.replace(`/${username}/${repoName}/issues`);
+      router.replace(`/${owner}/${repoName}/issues`);
     } catch (error) {
       setErrorAlert({
         ...errorAlert,
@@ -133,11 +133,11 @@ export default function Issue({ issue, username, repoName }) {
   return (
     <>
       <Head>
-        <title>{`${issue.title} · ${issue.number} · ${username}/${repoName}`}</title>
+        <title>{`${issue.title} · ${issue.number} · ${owner}/${repoName}`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <>
-        <ProjectNavbar username={username} repoName={repoName} />
+        <ProjectNavbar owner={owner} repoName={repoName} />
         <Container className={classes.root}>
           <IssueHeader
             title={issue.title}

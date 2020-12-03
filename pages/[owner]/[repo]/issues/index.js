@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 const prisma = new PrismaClient();
 
 export async function getServerSideProps({
-  params: { username, repo: repoName },
+  params: { owner, repo: repoName },
   query: { author, label, assignee, state, sort, page = 1, limit },
 }) {
   // Filter
@@ -57,14 +57,14 @@ export async function getServerSideProps({
   const take = limit || 15;
   const skip = (page - 1) * take;
 
-  const owner = await prisma.user.findOne({
-    where: { username },
+  const user = await prisma.user.findOne({
+    where: { username: owner },
     select: { id: true },
   });
-  if (!owner) return { notFound: true };
+  if (!user) return { notFound: true };
   const repository = await prisma.repository.findOne({
     where: {
-      repositories_name_owner_id_key: { name: repoName, ownerId: owner.id },
+      repositories_name_owner_id_key: { name: repoName, ownerId: user.id },
     },
     select: {
       id: true,
@@ -100,23 +100,19 @@ export async function getServerSideProps({
     return { ...issue, createdAt, updatedAt };
   });
   return {
-    props: { repository, username, repoName },
+    props: { repository, owner, repoName },
   };
 }
 
-export default function Issues({ repository, username, repoName }) {
+export default function Issues({ repository, owner, repoName }) {
   const classes = useStyles();
   return (
     <>
       <Head>
-        <title>{`Issues · ${username}/${repoName}`}</title>
+        <title>{`Issues · ${owner}/${repoName}`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ProjectNavbar
-        repository={repository}
-        username={username}
-        repoName={repoName}
-      />
+      <ProjectNavbar owner={owner} repoName={repoName} />
       <Container className={classes.root}>
         <div className={classes.filterAndButtons}>
           <IssuesFilter />
@@ -129,18 +125,14 @@ export default function Issues({ repository, username, repoName }) {
               color="secondary"
               variant="contained"
               component={Link}
-              href={`/${username}/${repoName}/issues/new`}
+              href={`/${owner}/${repoName}/issues/new`}
               naked
             >
               New Issue
             </Button>
           </div>
         </div>
-        <IssuesList
-          repository={repository}
-          username={username}
-          repoName={repoName}
-        />
+        <IssuesList repository={repository} />
       </Container>
     </>
   );

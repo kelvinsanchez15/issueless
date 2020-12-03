@@ -52,7 +52,7 @@ export default function IssueHeader({
 }) {
   const classes = useStyles();
   const router = useRouter();
-  const { username: owner, repo: repoName } = router.query;
+  const { owner, repo: repoName } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [showHeader, setShowHeader] = useState(true);
 
