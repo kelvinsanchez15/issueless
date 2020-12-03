@@ -4,11 +4,15 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const handler = async (req, res) => {
-  const { owner, repo: repoName, issue_number: issueNumber } = req.query;
-  const userId = Number(req.session.userId);
+  const { username: loggedUser } = req.session;
+  const {
+    owner: repoOwner,
+    repo: repoName,
+    issue_number: issueNumber,
+  } = req.query;
 
   const user = await prisma.user.findOne({
-    where: { username: owner },
+    where: { username: repoOwner },
     select: { id: true },
   });
   if (!user) {
@@ -35,27 +39,32 @@ const handler = async (req, res) => {
         repoId: repository.id,
       },
     },
-    select: { id: true, userId: true },
+    select: { id: true, user: { select: { username: true } } },
   });
   if (!issue) {
     res.status(404).json({ message: 'Not found' });
     return;
   }
-  // Check if the one making the request is the repo owner or issue owner
-  if (user.id !== userId && issue.userId !== userId) {
-    res.status(403).json({ message: 'Forbidden' });
-    return;
-  }
+  const isIssueOwner = loggedUser === issue.user.username;
+  const isRepoOwner = loggedUser === repoOwner;
 
   switch (req.method) {
     case 'PATCH':
       try {
+        // Allow only the issue owner or repo owner permission to update issues
+        if (!(isIssueOwner || isRepoOwner)) {
+          res.status(403).json({ message: 'Forbidden' });
+          return;
+        }
         // Update issue: /api/{owner}]/{repo}/issues/{issue_number}
-        const { title, body, labels } = req.body;
+        const { title, body, state, assignee, labels } = req.body;
         const updates = {
           ...(title && { title }),
           ...(body && { body }),
-          ...(labels && { labels: { connect: labels } }),
+          ...(state && { state }),
+          // Allow only the repo owner to update "assignee" and "labels" fields
+          ...(assignee && isRepoOwner && { assignee }),
+          ...(labels && isRepoOwner && { labels: { connect: labels } }),
         };
         const updatedIssue = await prisma.issue.update({
           where: { id: issue.id },
@@ -72,6 +81,11 @@ const handler = async (req, res) => {
       break;
     case 'DELETE':
       try {
+        // Allow only the repo owner permission to delete issues
+        if (!isRepoOwner) {
+          res.status(403).json({ message: 'Forbidden' });
+          return;
+        }
         // Delete issue: /api/{owner}]/{repo}/issues/{issue_number}
         await prisma.issue.delete({ where: { id: issue.id } });
         res.status(204).end();
