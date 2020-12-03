@@ -88,6 +88,7 @@ export async function getStaticProps({
     // Parse dates to avoid serializable error
     issue.createdAt = issue.createdAt.toISOString();
     issue.updatedAt = issue.updatedAt.toISOString();
+    issue.closedAt = issue.closedAt ? issue.closedAt.toISOString() : null;
     return {
       props: { issue, owner, repoName },
       revalidate: 2,
