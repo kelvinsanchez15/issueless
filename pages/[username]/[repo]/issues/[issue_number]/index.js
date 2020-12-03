@@ -48,7 +48,7 @@ export async function getStaticPaths() {
       params: {
         username: issue.repositories.user.username,
         repo: issue.repositories.name,
-        issue: String(issue.number),
+        issue_number: String(issue.number),
       },
     }));
     return {
@@ -61,7 +61,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({
-  params: { username, repo: repoName, issue: issueNumber },
+  params: { username, repo: repoName, issue_number: issueNumber },
 }) {
   try {
     const owner = await prisma.user.findOne({

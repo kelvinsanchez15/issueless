@@ -6,7 +6,7 @@ import { StepConnector, Divider } from '@material-ui/core';
 
 export default function IssueCommentList() {
   const router = useRouter();
-  const { username, repo: repoName, issue: issueNumber } = router.query;
+  const { username, repo: repoName, issue_number: issueNumber } = router.query;
   const url = `/api/repos/${username}/${repoName}/issues/${issueNumber}/comments`;
   const { data: comments } = useSWR(url, fetcher);
 
