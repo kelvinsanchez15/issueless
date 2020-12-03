@@ -179,8 +179,29 @@ $BODY$
 LANGUAGE 'plpgsql';
 
 CREATE TRIGGER issue_number_trigger
-BEFORE INSERT
-ON "Issue"
-FOR EACH ROW
-EXECUTE PROCEDURE issue_number_function();
+  BEFORE INSERT
+  ON "Issue"
+  FOR EACH ROW
+  EXECUTE PROCEDURE issue_number_function();
 
+-- Trigger to set 'closed_at' field to current date when the state is changed to 'closed'
+CREATE OR REPLACE FUNCTION close_state_function()
+RETURNS TRIGGER AS
+$BODY$
+BEGIN 
+  IF NEW.state = 'closed'
+    THEN NEW.closed_at = NOW();
+  ELSE
+    NEW.closed_at = NULL;
+  END IF;
+  RETURN NEW;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER close_state_trigger
+  BEFORE UPDATE
+  ON "Issue"
+  FOR EACH ROW
+  WHEN (NEW.state != OLD.state)
+  EXECUTE PROCEDURE close_state_function();
