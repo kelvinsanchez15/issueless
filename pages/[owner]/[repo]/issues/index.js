@@ -97,7 +97,8 @@ export async function getServerSideProps({
   repository.issues = repository.issues.map((issue) => {
     const createdAt = issue.createdAt.toISOString();
     const updatedAt = issue.updatedAt.toISOString();
-    return { ...issue, createdAt, updatedAt };
+    const closedAt = issue.closedAt ? issue.closedAt.toISOString() : null;
+    return { ...issue, createdAt, updatedAt, closedAt };
   });
   return {
     props: { repository, owner, repoName },
