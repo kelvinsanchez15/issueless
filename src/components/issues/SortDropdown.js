@@ -13,14 +13,6 @@ const menuItems = [
     sort: 'createdAt:asc',
   },
   {
-    text: 'Most commented',
-    sort: 'comments:desc',
-  },
-  {
-    text: 'Least commented',
-    sort: 'comments:asc',
-  },
-  {
     text: 'Recently updated',
     sort: 'updatedAt:desc',
   },
