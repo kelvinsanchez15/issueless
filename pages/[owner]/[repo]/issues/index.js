@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Button, Chip } from '@material-ui/core';
 import { LocalOfferOutlined as LabelIcon } from '@material-ui/icons';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, join } from '@prisma/client';
 import Link from 'src/components/Link';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
 import IssuesList from 'src/components/issues/IssuesList';
@@ -82,7 +82,27 @@ export async function getServerSideProps({
     },
   });
   if (!repository) return { notFound: true };
+
   // Counts
+  if (repository.issues.length > 0) {
+    const issuesIds = repository.issues.map((issue) => issue.id);
+    const issuesWithCommentCount = await prisma.$queryRaw`
+    SELECT "Issue".id,    
+    COUNT(DISTINCT "Comment".id) AS comments
+    FROM "Issue"
+    LEFT JOIN "Comment" ON "Comment".issue_id = "Issue".id
+    GROUP BY "Issue".id
+    HAVING "Issue".id IN (${join(issuesIds)})
+  `;
+    // Merge issues list with issuesWithCommentCount to get comment count field on each issue
+    repository.issues = repository.issues.map((issue) => ({
+      ...issue,
+      ...issuesWithCommentCount.find(
+        (issueWithCount) => issueWithCount.id === issue.id
+      ),
+    }));
+  }
+
   const issuesCount = await prisma.issue.count({
     where: { ...filter, repositories: { name: repoName, ownerId: owner.id } },
   });
