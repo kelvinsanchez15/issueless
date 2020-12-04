@@ -101,8 +101,7 @@ CREATE TABLE repositories
     created_at     TIMESTAMP NOT NULL DEFAULT NOW(),    
     owner_id       INTEGER,
     UNIQUE (name, owner_id),
-    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE   
-    -- watchers_count
+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE       
   );
 
 CREATE TABLE stars  
