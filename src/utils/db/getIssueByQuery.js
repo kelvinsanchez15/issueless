@@ -26,7 +26,7 @@ export default async function getIssueByQuery(query, prisma) {
         repoId: repository.id,
       },
     },
-    select: { id: true },
+    select: { id: true, user: { select: { username: true } } },
   });
   if (!issue) {
     throw new Error('Not found');
