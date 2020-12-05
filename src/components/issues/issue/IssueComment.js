@@ -46,7 +46,7 @@ export default function IssueComment({
   const isCommentOwnerOrRepoOwner =
     session?.username === username || session?.username === owner;
 
-  const url = `/api/repos/${owner}/${repoName}/issues/${issueNumber}/comments`;
+  const url = `/api/repos/${owner}/${repoName}/issues/${issueNumber}`;
   const { mutate } = useSWR(url, fetcher);
 
   return (

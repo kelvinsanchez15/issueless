@@ -36,7 +36,7 @@ export default function NewComment({ state, image }) {
   const router = useRouter();
   const { owner, repo: repoName, issue_number: issueNumber } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
-  const url = `/api/repos/${owner}/${repoName}/issues/${issueNumber}/comments`;
+  const url = `/api/repos/${owner}/${repoName}/issues/${issueNumber}`;
   const { mutate } = useSWR(url, fetcher);
   return (
     <Card className={classes.root}>

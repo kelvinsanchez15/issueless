@@ -26,6 +26,9 @@ import IssueHeader from 'src/components/issues/issue/IssueHeader';
 import IssueDetails from 'src/components/issues/issue/IssueDetails';
 import IssueCommentList from 'src/components/issues/issue/IssueCommentList';
 import NewComment from 'src/components/issues/issue/NewComment';
+import getIssueAndComments from 'src/utils/db/getIssueAndComments';
+import useSWR from 'swr';
+import fetcher from 'src/utils/fetcher';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,52 +63,49 @@ export async function getStaticPaths() {
   }
 }
 
-export async function getStaticProps({
-  params: { owner, repo: repoName, issue_number: issueNumber },
-}) {
+export async function getStaticProps({ params }) {
   try {
-    const user = await prisma.user.findOne({
-      where: { username: owner },
-      select: { id: true },
-    });
-    if (!user) return { notFound: true };
-    const repository = await prisma.repository.findOne({
-      where: {
-        repositories_name_owner_id_key: { name: repoName, ownerId: user.id },
-      },
-    });
-    if (!repository) return { notFound: true };
-    const issue = await prisma.issue.findOne({
-      where: {
-        Issue_number_repo_id_key: {
-          number: Number(issueNumber),
-          repoId: repository.id,
-        },
-      },
-      include: { user: { select: { username: true, image: true } } },
-    });
-    if (!issue) return { notFound: true };
+    const issue = await getIssueAndComments(params, prisma);
     // Parse dates to avoid serializable error
     issue.createdAt = issue.createdAt.toISOString();
     issue.updatedAt = issue.updatedAt.toISOString();
     issue.closedAt = issue.closedAt ? issue.closedAt.toISOString() : null;
+    issue.comments = issue.comments.map((comment) => {
+      const createdAt = comment.createdAt.toISOString();
+      const updatedAt = comment.updatedAt.toISOString();
+      return { ...comment, createdAt, updatedAt };
+    });
     return {
-      props: { issue, owner, repoName },
+      props: { issue },
       revalidate: 2,
     };
+  } catch (error) {
+    if (error.message === 'Not found') {
+      return { notFound: true };
+    }
+    throw Error(error);
   } finally {
     await prisma.$disconnect();
   }
 }
 
-export default function Issue({ issue, owner, repoName }) {
+export default function Issue({ issue: issueInitialData }) {
   const classes = useStyles();
   const router = useRouter();
+  const { owner, repo: repoName, issue_number: issueNumber } = router.query;
   const [submitting, setSubmitting] = useState(false);
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [session] = useSession();
   const userHasValidSession = Boolean(session);
   const issueBelongToUser = session?.username === owner;
+
+  const { data: issue } = useSWR(
+    `/api/repos/${owner}/${repoName}/issues/${issueNumber}`,
+    fetcher,
+    {
+      initialData: issueInitialData,
+    }
+  );
 
   const handleIssueDelete = async () => {
     setErrorAlert({ ...errorAlert, open: false });
@@ -161,7 +161,7 @@ export default function Issue({ issue, owner, repoName }) {
                 issueBelongToUser={issueBelongToUser}
               />
               <StepConnector orientation="vertical" />
-              <IssueCommentList />
+              <IssueCommentList comments={issue.comments} />
               {userHasValidSession && (
                 <NewComment state={issue.state} image={session?.user.image} />
               )}
