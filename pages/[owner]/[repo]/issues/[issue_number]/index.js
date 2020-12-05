@@ -30,13 +30,13 @@ import getIssueAndComments from 'src/utils/db/getIssueAndComments';
 import useSWR from 'swr';
 import fetcher from 'src/utils/fetcher';
 
+const prisma = new PrismaClient();
+
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
   },
 }));
-
-const prisma = new PrismaClient();
 
 export async function getStaticPaths() {
   try {
@@ -96,9 +96,6 @@ export default function Issue({ issue: issueInitialData }) {
   const [submitting, setSubmitting] = useState(false);
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [session] = useSession();
-  const userHasValidSession = Boolean(session);
-  const issueBelongToUser = session?.username === owner;
-
   const { data: issue } = useSWR(
     `/api/repos/${owner}/${repoName}/issues/${issueNumber}`,
     fetcher,
@@ -106,6 +103,8 @@ export default function Issue({ issue: issueInitialData }) {
       initialData: issueInitialData,
     }
   );
+  const userHasValidSession = Boolean(session);
+  const isRepoOwner = session?.username === owner;
 
   const handleIssueDelete = async () => {
     setErrorAlert({ ...errorAlert, open: false });
@@ -146,8 +145,6 @@ export default function Issue({ issue: issueInitialData }) {
             state={issue.state}
             createdAt={issue.createdAt}
             username={issue.user.username}
-            userHasValidSession={userHasValidSession}
-            issueBelongToUser={issueBelongToUser}
           />
 
           <Grid className={classes.root} container spacing={2}>
@@ -157,8 +154,6 @@ export default function Issue({ issue: issueInitialData }) {
                 createdAt={issue.createdAt}
                 username={issue.user.username}
                 image={issue.user.image}
-                userHasValidSession={userHasValidSession}
-                issueBelongToUser={issueBelongToUser}
               />
               <StepConnector orientation="vertical" />
               <IssueCommentList comments={issue.comments} />
@@ -188,7 +183,7 @@ export default function Issue({ issue: issueInitialData }) {
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
-                {userHasValidSession && issueBelongToUser && (
+                {userHasValidSession && isRepoOwner && (
                   <ListItem>
                     <Button
                       onClick={handleIssueDelete}
