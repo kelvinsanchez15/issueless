@@ -12,6 +12,7 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import Link from 'src/components/Link';
 import formatDate from 'src/utils/formatDate';
+import { useSession } from 'next-auth/client';
 import useSWR from 'swr';
 import fetcher from 'src/utils/fetcher';
 
@@ -49,8 +50,6 @@ export default function IssueHeader({
   state,
   createdAt,
   username,
-  userHasValidSession,
-  issueBelongToUser,
 }) {
   const classes = useStyles();
   const router = useRouter();
@@ -61,6 +60,11 @@ export default function IssueHeader({
     `/api/repos/${owner}/${repoName}/issues/${issueNumber}`,
     fetcher
   );
+  const [session] = useSession();
+  const userHasValidSession = Boolean(session);
+  const isIssueOwnerOrRepoOwner =
+    session?.username === username || session?.username === owner;
+
   return (
     <div>
       {showHeader ? (
@@ -72,7 +76,7 @@ export default function IssueHeader({
             </Typography>
           </Typography>
           <div className={classes.headerActions}>
-            {userHasValidSession && issueBelongToUser && (
+            {userHasValidSession && isIssueOwnerOrRepoOwner && (
               <Button variant="outlined" onClick={() => setShowHeader(false)}>
                 Edit
               </Button>
