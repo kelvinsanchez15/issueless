@@ -19,6 +19,8 @@ import { Alert } from '@material-ui/lab';
 import { Edit as EditIcon } from '@material-ui/icons';
 import formatDate from 'src/utils/formatDate';
 import { useSession } from 'next-auth/client';
+import useSWR from 'swr';
+import fetcher from 'src/utils/fetcher';
 
 const useStyles = makeStyles((theme) => ({
   cardHeader: {
@@ -31,21 +33,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function IssueDetails({
   body = 'No description provided.',
-  number,
   createdAt,
   username,
   image,
 }) {
   const classes = useStyles();
   const router = useRouter();
-  const { owner, repo: repoName } = router.query;
+  const { owner, repo: repoName, issue_number: issueNumber } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [showComment, setShowComment] = useState(true);
   const [session] = useSession();
   const userHasValidSession = Boolean(session);
   const isIssueOwnerOrRepoOwner =
     session?.username === username || session?.username === owner;
-
+  const { mutate } = useSWR(
+    `/api/repos/${owner}/${repoName}/issues/${issueNumber}`,
+    fetcher
+  );
   return (
     <>
       <Card>
@@ -91,7 +95,7 @@ export default function IssueDetails({
                 setErrorAlert({ ...errorAlert, open: false });
                 try {
                   const res = await fetch(
-                    `/api/repos/${owner}/${repoName}/issues/${number}`,
+                    `/api/repos/${owner}/${repoName}/issues/${issueNumber}`,
                     {
                       method: 'PATCH',
                       headers: { 'Content-Type': 'application/json' },
@@ -104,7 +108,7 @@ export default function IssueDetails({
                     throw new Error(message);
                   }
                   setShowComment(true);
-                  router.reload();
+                  mutate();
                 } catch (error) {
                   setErrorAlert({
                     ...errorAlert,
