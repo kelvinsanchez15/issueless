@@ -1,9 +1,7 @@
 import { getSession } from 'next-auth/client';
-import { PrismaClient } from '@prisma/client';
+import prisma from 'src/utils/db/prisma';
 import getIssueAndComments from 'src/utils/db/getIssueAndComments';
 import getIssueByQuery from 'src/utils/db/getIssueByQuery';
-
-const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
   const { query } = req;

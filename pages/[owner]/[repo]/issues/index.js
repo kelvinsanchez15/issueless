@@ -2,7 +2,8 @@ import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Button, Chip } from '@material-ui/core';
 import { LocalOfferOutlined as LabelIcon } from '@material-ui/icons';
-import { PrismaClient, join } from '@prisma/client';
+import prisma from 'src/utils/db/prisma';
+import { join } from '@prisma/client';
 import Link from 'src/components/Link';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
 import IssuesList from 'src/components/issues/IssuesList';
@@ -25,8 +26,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
   },
 }));
-
-const prisma = new PrismaClient();
 
 export async function getServerSideProps({
   params: { owner, repo: repoName },

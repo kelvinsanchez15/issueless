@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Button, Grid } from '@material-ui/core';
 import { BookOutlined as RepoIcon } from '@material-ui/icons';
-import { PrismaClient } from '@prisma/client';
+import prisma from 'src/utils/db/prisma';
 import Link from 'src/components/Link';
 import UserProfile from 'src/components/UserProfile';
 import ReposList from 'src/components/ReposList';
@@ -20,8 +20,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
   },
 }));
-
-const prisma = new PrismaClient();
 
 export async function getStaticPaths() {
   try {
