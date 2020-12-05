@@ -12,6 +12,8 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import Link from 'src/components/Link';
 import formatDate from 'src/utils/formatDate';
+import useSWR from 'swr';
+import fetcher from 'src/utils/fetcher';
 
 const useStyles = makeStyles((theme) => ({
   openIssueChip: {
@@ -52,10 +54,13 @@ export default function IssueHeader({
 }) {
   const classes = useStyles();
   const router = useRouter();
-  const { owner, repo: repoName } = router.query;
+  const { owner, repo: repoName, issue_number: issueNumber } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const [showHeader, setShowHeader] = useState(true);
-
+  const { mutate } = useSWR(
+    `/api/repos/${owner}/${repoName}/issues/${issueNumber}`,
+    fetcher
+  );
   return (
     <div>
       {showHeader ? (
@@ -107,7 +112,7 @@ export default function IssueHeader({
                   throw new Error(message);
                 }
                 setShowHeader(true);
-                router.reload();
+                mutate();
               } catch (error) {
                 setErrorAlert({
                   ...errorAlert,
