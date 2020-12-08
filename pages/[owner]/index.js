@@ -6,6 +6,7 @@ import prisma from 'src/utils/db/prisma';
 import Link from 'src/components/Link';
 import UserProfile from 'src/components/UserProfile';
 import ReposList from 'src/components/ReposList';
+import { useSession } from 'next-auth/client';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +75,9 @@ export async function getStaticProps({ params: { owner } }) {
 
 export default function User({ user }) {
   const classes = useStyles();
+  const [session] = useSession();
+  const userHasValidSession = Boolean(session);
+  const isRepoOwner = session?.username === user.username;
 
   return (
     <>
@@ -91,16 +95,18 @@ export default function User({ user }) {
               <Typography className={classes.title} variant="h5">
                 Repositories:
               </Typography>
-              <Button
-                startIcon={<RepoIcon />}
-                color="secondary"
-                variant="contained"
-                href="/new"
-                component={Link}
-                naked
-              >
-                New
-              </Button>
+              {userHasValidSession && isRepoOwner && (
+                <Button
+                  startIcon={<RepoIcon />}
+                  color="secondary"
+                  variant="contained"
+                  href="/new"
+                  component={Link}
+                  naked
+                >
+                  New
+                </Button>
+              )}
             </div>
             <ReposList repos={user.repositories} username={user.username} />
           </Grid>
