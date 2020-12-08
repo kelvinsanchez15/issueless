@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Button, Grid } from '@material-ui/core';
+import { Container, Button, Grid, Typography } from '@material-ui/core';
 import { BookOutlined as RepoIcon } from '@material-ui/icons';
 import prisma from 'src/utils/db/prisma';
 import Link from 'src/components/Link';
@@ -15,9 +15,12 @@ const useStyles = makeStyles((theme) => ({
     width: 'auto',
     height: 'auto',
   },
-  tempWrapper: {
+  wrapper: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  title: {
+    flexGrow: 1,
   },
 }));
 
@@ -84,7 +87,10 @@ export default function User({ user }) {
             <UserProfile user={user} />
           </Grid>
           <Grid item xs={9}>
-            <div className={classes.tempWrapper}>
+            <div className={classes.wrapper}>
+              <Typography className={classes.title} variant="h5">
+                Repositories:
+              </Typography>
               <Button
                 startIcon={<RepoIcon />}
                 color="secondary"
