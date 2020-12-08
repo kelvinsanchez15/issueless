@@ -1,5 +1,6 @@
 import { getSession } from 'next-auth/client';
 import prisma from 'src/utils/db/prisma';
+import slugify from 'src/utils/slugify';
 
 export default async function handler(req, res) {
   const { owner, repo: repoName } = req.query;
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
         }
         const { name, description } = req.body;
         const updates = {
-          ...(name && { name }),
+          ...(name && { name: slugify(name) }),
           ...(description && { description }),
         };
         const repository = await prisma.repository.update({

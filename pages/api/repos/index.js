@@ -1,5 +1,6 @@
 import withSession from 'src/utils/withSession';
 import prisma from 'src/utils/db/prisma';
+import slugify from 'src/utils/slugify';
 
 const handler = async (req, res) => {
   if (!req.method === 'POST') {
@@ -16,7 +17,7 @@ const handler = async (req, res) => {
       return;
     }
     const data = {
-      name,
+      name: slugify(name),
       ...(description && { description }),
       user: { connect: { id: userId } },
     };

@@ -16,6 +16,7 @@ import {
 import { BookOutlined as RepoIcon } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
 import { useSession } from 'next-auth/client';
+import slugify from 'src/utils/slugify';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -98,7 +99,7 @@ export default function NewRepository() {
                   const { message } = await res.json();
                   throw new Error(message);
                 }
-                router.replace(`/${session.username}/${name}/issues`);
+                router.replace(`/${session.username}/${slugify(name)}/issues`);
                 resetForm();
               } catch (error) {
                 setErrorAlert({
