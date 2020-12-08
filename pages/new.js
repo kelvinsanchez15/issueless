@@ -78,8 +78,8 @@ export default function NewRepository() {
           <Formik
             initialValues={{ name: '', description: '' }}
             validationSchema={Yup.object({
-              name: Yup.string().trim().strict(true).required('Required'),
-              description: Yup.string().trim().strict(true),
+              name: Yup.string().required('Required'),
+              description: Yup.string(),
             })}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
               setErrorAlert({ ...errorAlert, open: false });
