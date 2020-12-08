@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
+import slugify from 'src/utils/slugify';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -72,7 +73,7 @@ export default function LoginPage() {
           <Formik
             initialValues={{ username: '' }}
             validationSchema={Yup.object({
-              username: Yup.string().trim().strict(true).required('Required'),
+              username: Yup.string().required('Required'),
             })}
             onSubmit={async (values, { setSubmitting }) => {
               setErrorAlert(false);
@@ -89,7 +90,7 @@ export default function LoginPage() {
                   throw new Error(error);
                 }
                 await getSession();
-                router.replace(`/${username}`);
+                router.replace(`/${slugify(username)}`);
                 setSubmitting(false);
               } catch (error) {
                 setErrorAlert(true);
