@@ -1,5 +1,6 @@
 import withSession from 'src/utils/withSession';
 import prisma from 'src/utils/db/prisma';
+import slugify from 'src/utils/slugify';
 
 const handler = async (req, res) => {
   const userId = Number(req.session.userId);
@@ -19,7 +20,7 @@ const handler = async (req, res) => {
         const updates = {
           ...(name && { name }),
           ...(bio && { bio }),
-          ...(username && { username }),
+          ...(username && { username: slugify(username) }),
         };
         const user = await prisma.user.update({
           where: { id: userId },
