@@ -141,7 +141,7 @@ CREATE TABLE "Issue"
   );
 
 CREATE TABLE "_IssueToLabel" (
-    "A" integer NOT NULL REFERENCES "Issue"(id) ,
+    "A" integer NOT NULL REFERENCES "Issue"(id) ON DELETE CASCADE,
     "B" integer NOT NULL REFERENCES "Label"(id)
 );
 CREATE UNIQUE INDEX "_IssueToLabel_AB_unique" ON "_IssueToLabel"("A" int4_ops,"B" int4_ops);
