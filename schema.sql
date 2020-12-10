@@ -95,11 +95,12 @@ CREATE UNIQUE INDEX username
 -- Project schema
 CREATE TABLE repositories
   (
-    id             SERIAL PRIMARY KEY NOT NULL,
-    name           VARCHAR(255) NOT NULL,
-    description    VARCHAR(255),    
-    created_at     TIMESTAMP NOT NULL DEFAULT NOW(),    
-    owner_id       INTEGER,
+    id               SERIAL PRIMARY KEY NOT NULL,
+    name             VARCHAR(255) NOT NULL,
+    description      VARCHAR(255),    
+    created_at       TIMESTAMP NOT NULL DEFAULT NOW(),
+    max_issue_number INTEGER,    
+    owner_id         INTEGER,
     UNIQUE (name, owner_id),
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE       
   );
@@ -162,18 +163,19 @@ CREATE TABLE "Comment"
 CREATE OR REPLACE FUNCTION issue_number_function()
 RETURNS TRIGGER AS
 $BODY$
-DECLARE
-  max INTEGER:=NULL;
-BEGIN
-  SELECT count(number) INTO max FROM "Issue" WHERE repo_id=NEW.repo_id;
-  IF max IS NULL THEN
-    max:=1;
-  ELSE
-    max=max+1;
-  END IF;
-  NEW.number:=max;
-  RETURN NEW;
-END;
+  DECLARE
+    max INTEGER:=NULL;
+  BEGIN
+    SELECT max_issue_number INTO max FROM repositories WHERE id=NEW.repo_id;
+    IF max IS NULL THEN
+      max:=1;
+    ELSE
+      max=max+1;
+    END IF;
+    UPDATE repositories SET max_issue_number = max WHERE id=NEW.repo_id;
+    NEW.number:=max;
+    RETURN NEW;
+  END;
 $BODY$
 LANGUAGE 'plpgsql';
 
@@ -187,14 +189,14 @@ CREATE TRIGGER issue_number_trigger
 CREATE OR REPLACE FUNCTION close_state_function()
 RETURNS TRIGGER AS
 $BODY$
-BEGIN 
-  IF NEW.state = 'closed'
-    THEN NEW.closed_at = NOW();
-  ELSE
-    NEW.closed_at = NULL;
-  END IF;
-  RETURN NEW;
-END;
+  BEGIN 
+    IF NEW.state = 'closed'
+      THEN NEW.closed_at = NOW();
+    ELSE
+      NEW.closed_at = NULL;
+    END IF;
+    RETURN NEW;
+  END;
 $BODY$
 LANGUAGE 'plpgsql';
 

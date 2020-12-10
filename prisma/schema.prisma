@@ -26,14 +26,15 @@ model User {
 }
 
 model Repository {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  ownerId     Int?     @map("owner_id")
-  user        User?    @relation(fields: [ownerId], references: [id])
-  issues      Issue[]
-  stars       Star[]   @relation("repositoriesTostars")
+  id             Int      @id @default(autoincrement())
+  name           String
+  description    String?
+  createdAt      DateTime @default(now()) @map("created_at")
+  maxIssueNumber Int?     @map("max_issue_number")
+  ownerId        Int?     @map("owner_id")
+  user           User?    @relation(fields: [ownerId], references: [id])
+  issues         Issue[]
+  stars          Star[]   @relation("repositoriesTostars")
 
   @@unique([name, ownerId], name: "repositories_name_owner_id_key")
   @@map("repositories")
