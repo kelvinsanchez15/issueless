@@ -144,7 +144,7 @@ export default function Issue({ issue: issueInitialData }) {
             number={issue.number}
             state={issue.state}
             createdAt={issue.createdAt}
-            username={issue.user.username}
+            issueAuthor={issue.user.username}
           />
 
           <Grid className={classes.root} container spacing={2}>
@@ -152,13 +152,17 @@ export default function Issue({ issue: issueInitialData }) {
               <IssueDetails
                 body={issue.body || undefined}
                 createdAt={issue.createdAt}
-                username={issue.user.username}
+                issueAuthor={issue.user.username}
                 image={issue.user.image}
               />
               <StepConnector orientation="vertical" />
               <IssueCommentList comments={issue.comments} />
               {userHasValidSession && (
-                <NewComment state={issue.state} image={session?.user.image} />
+                <NewComment
+                  state={issue.state}
+                  issueAuthor={issue.user.username}
+                  image={session?.user.image}
+                />
               )}
             </Grid>
 
