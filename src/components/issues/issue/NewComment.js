@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core';
 import { CheckCircleOutline as ClosedIssueIcon } from '@material-ui/icons';
 import fetcher from 'src/utils/fetcher';
+import { useSession } from 'next-auth/client';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,13 +32,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NewComment({ state, image }) {
+export default function NewComment({ state, issueAuthor, image }) {
   const classes = useStyles();
   const router = useRouter();
   const { owner, repo: repoName, issue_number: issueNumber } = router.query;
   const [errorAlert, setErrorAlert] = useState({ open: false, message: '' });
   const url = `/api/repos/${owner}/${repoName}/issues/${issueNumber}`;
   const { mutate } = useSWR(url, fetcher);
+  const [session] = useSession();
+  const isIssueAuthorOrRepoOwner =
+    session?.username === issueAuthor || session?.username === owner;
+
+  const handleToggleState = async (newState) => {
+    setErrorAlert({ ...errorAlert, open: false });
+    try {
+      const res = await fetch(
+        `/api/repos/${owner}/${repoName}/issues/${issueNumber}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ state: newState }),
+        }
+      );
+      if (!res.ok) {
+        const { message } = await res.json();
+        throw new Error(message);
+      }
+      mutate();
+    } catch (error) {
+      setErrorAlert({
+        ...errorAlert,
+        open: true,
+        message: error.message,
+      });
+    }
+  };
   return (
     <Card className={classes.root}>
       <Formik
@@ -96,18 +125,24 @@ export default function NewComment({ state, image }) {
                 helperText=" "
               />
             </CardContent>
-
             <CardActions className={classes.cardActions}>
-              {state === 'open' ? (
-                <Button
-                  variant="outlined"
-                  startIcon={<ClosedIssueIcon color="error" />}
-                >
-                  Close issue
-                </Button>
-              ) : (
-                <Button variant="outlined">Reopen issue</Button>
-              )}
+              {isIssueAuthorOrRepoOwner &&
+                (state === 'open' ? (
+                  <Button
+                    variant="outlined"
+                    startIcon={<ClosedIssueIcon color="error" />}
+                    onClick={() => handleToggleState('closed')}
+                  >
+                    Close issue
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleToggleState('open')}
+                  >
+                    Reopen issue
+                  </Button>
+                ))}
               <Button
                 variant="contained"
                 color="secondary"
