@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 export default function IssueDetails({
   body = 'No description provided.',
   createdAt,
-  username,
+  issueAuthor,
   image,
 }) {
   const classes = useStyles();
@@ -44,8 +44,8 @@ export default function IssueDetails({
   const [showComment, setShowComment] = useState(true);
   const [session] = useSession();
   const userHasValidSession = Boolean(session);
-  const isIssueOwnerOrRepoOwner =
-    session?.username === username || session?.username === owner;
+  const isIssueAuthorOrRepoOwner =
+    session?.username === issueAuthor || session?.username === owner;
   const { mutate } = useSWR(
     `/api/repos/${owner}/${repoName}/issues/${issueNumber}`,
     fetcher
@@ -60,7 +60,7 @@ export default function IssueDetails({
               avatar={<Avatar src={image} aria-label="user image" />}
               action={
                 userHasValidSession &&
-                isIssueOwnerOrRepoOwner && (
+                isIssueAuthorOrRepoOwner && (
                   <IconButton
                     onClick={() => setShowComment(false)}
                     aria-label="settings"
@@ -73,7 +73,7 @@ export default function IssueDetails({
               title={
                 // eslint-disable-next-line react/jsx-wrap-multilines
                 <Typography>
-                  <strong>{username}</strong>
+                  <strong>{issueAuthor}</strong>
                   {` commented ${formatDate(createdAt)}`}
                 </Typography>
               }

@@ -49,7 +49,7 @@ export default function IssueHeader({
   number,
   state,
   createdAt,
-  username,
+  issueAuthor,
 }) {
   const classes = useStyles();
   const router = useRouter();
@@ -62,8 +62,8 @@ export default function IssueHeader({
   );
   const [session] = useSession();
   const userHasValidSession = Boolean(session);
-  const isIssueOwnerOrRepoOwner =
-    session?.username === username || session?.username === owner;
+  const isIssueAuthorOrRepoOwner =
+    session?.username === issueAuthor || session?.username === owner;
 
   return (
     <div>
@@ -76,7 +76,7 @@ export default function IssueHeader({
             </Typography>
           </Typography>
           <div className={classes.headerActions}>
-            {userHasValidSession && isIssueOwnerOrRepoOwner && (
+            {userHasValidSession && isIssueAuthorOrRepoOwner && (
               <Button variant="outlined" onClick={() => setShowHeader(false)}>
                 Edit
               </Button>
@@ -178,7 +178,7 @@ export default function IssueHeader({
             className={classes.closedIssueChip}
           />
         )}
-        <strong>{username}</strong>
+        <strong>{issueAuthor}</strong>
         {` opened this issue ${formatDate(createdAt)}`}
       </Typography>
 
