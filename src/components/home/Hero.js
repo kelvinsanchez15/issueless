@@ -76,6 +76,7 @@ export default function Hero() {
                 width={1024}
                 height={566}
                 layout="responsive"
+                loading="eager"
               />
             </Grid>
           </Hidden>
