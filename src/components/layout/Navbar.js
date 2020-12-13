@@ -94,7 +94,7 @@ export default function Navbar() {
   const handleCreateMenuClose = () => setCreateAnchorEl(null);
 
   return (
-    <nav className={classes.grow}>
+    <nav>
       <AppBar position="static" color="default">
         <Toolbar>
           <IconButton
