@@ -135,7 +135,7 @@ export default function Issues({ repository, owner, repoName }) {
   const classes = useStyles();
   const router = useRouter();
   const { query } = router;
-  const properties = ['author', 'label', 'assignee', 'sort'];
+  const properties = ['state', 'author', 'label', 'assignee', 'sort'];
   const shouldRenderClearButton = properties.some((prop) =>
     Object.prototype.hasOwnProperty.call(query, prop)
   );
