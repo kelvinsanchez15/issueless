@@ -1,7 +1,11 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Button, Chip } from '@material-ui/core';
-import { LocalOfferOutlined as LabelIcon } from '@material-ui/icons';
+import {
+  LocalOfferOutlined as LabelIcon,
+  Clear as ClearIcon,
+} from '@material-ui/icons';
 import prisma from 'src/utils/db/prisma';
 import { join } from '@prisma/client';
 import Link from 'src/components/Link';
@@ -24,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
   ml1: {
     marginLeft: theme.spacing(1),
+  },
+  clearButton: {
+    marginTop: theme.spacing(1),
   },
 }));
 
@@ -126,6 +133,13 @@ export async function getServerSideProps({
 
 export default function Issues({ repository, owner, repoName }) {
   const classes = useStyles();
+  const router = useRouter();
+  const { query } = router;
+  const properties = ['author', 'label', 'assignee', 'sort'];
+  const shouldRenderClearButton = properties.some((prop) =>
+    Object.prototype.hasOwnProperty.call(query, prop)
+  );
+
   return (
     <>
       <Head>
@@ -134,23 +148,39 @@ export default function Issues({ repository, owner, repoName }) {
       </Head>
       <ProjectNavbar owner={owner} repoName={repoName} />
       <Container className={classes.root}>
-        <div className={classes.filterAndButtons}>
-          <IssuesFilter />
-          <div className={classes.buttonsWraper}>
-            <Button variant="outlined" startIcon={<LabelIcon />}>
-              Labels
-              <Chip className={classes.ml1} label={9} size="small" />
-            </Button>
+        <div>
+          <div className={classes.filterAndButtons}>
+            <IssuesFilter />
+            <div className={classes.buttonsWraper}>
+              <Button variant="outlined" startIcon={<LabelIcon />}>
+                Labels
+                <Chip className={classes.ml1} label={9} size="small" />
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                component={Link}
+                href={`/${owner}/${repoName}/issues/new`}
+                naked
+              >
+                New Issue
+              </Button>
+            </div>
+          </div>
+
+          {shouldRenderClearButton && (
             <Button
-              color="secondary"
-              variant="contained"
+              className={classes.clearButton}
+              startIcon={<ClearIcon />}
+              variant="text"
               component={Link}
-              href={`/${owner}/${repoName}/issues/new`}
+              href={`/${owner}/${repoName}/issues`}
+              size="small"
               naked
             >
-              New Issue
+              Clear current search query, filters, and sorts
             </Button>
-          </div>
+          )}
         </div>
         <IssuesList repository={repository} />
       </Container>
