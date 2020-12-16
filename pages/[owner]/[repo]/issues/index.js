@@ -45,7 +45,7 @@ export async function getServerSideProps({
     // GET /issues?label=bug
     ...(label && { labels: { some: { name: label } } }),
     // GET /issues?assignee=mathew159
-    ...(assignee && { assignee: { username: assignee } }),
+    ...(assignee && { assignee }),
     // GET /issues?state=open
     ...(state && { state }),
   };
