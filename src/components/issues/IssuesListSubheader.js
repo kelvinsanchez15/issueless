@@ -28,7 +28,7 @@ export default function IssuesListSubHeader({ repository, pathname, query }) {
             query: { ...query, state: 'open' },
           }}
           component={Link}
-          style={{ textDecoration: 'none' }}
+          naked
           startIcon={<OpenIssueIcon />}
         >
           {`${repository.openIssuesCount} Open`}
@@ -39,7 +39,7 @@ export default function IssuesListSubHeader({ repository, pathname, query }) {
             query: { ...query, state: 'closed' },
           }}
           component={Link}
-          style={{ textDecoration: 'none' }}
+          naked
           startIcon={<ClosedIssueIcon />}
         >
           {`${repository.closedIssuesCount} Closed`}
