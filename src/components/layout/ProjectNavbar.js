@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -18,6 +19,7 @@ import {
   SettingsOutlined as SettingsIcon,
 } from '@material-ui/icons';
 import fetcher from 'src/utils/fetcher';
+import { useSession } from 'next-auth/client';
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -31,12 +33,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProjectNavbar({ owner, repoName }) {
   const classes = useStyles();
+  const router = useRouter();
+  const [session] = useSession();
+  const userHasValidSession = Boolean(session);
   const { data, mutate } = useSWR(
     `/api/repos/${owner}/${repoName}/stargazers`,
     fetcher
   );
 
   const handleClickStar = async () => {
+    if (!userHasValidSession) {
+      router.push('/signin');
+      return;
+    }
     const res = await fetch(`/api/repos/${owner}/${repoName}/stargazers`, {
       method: data?.starred ? 'DELETE' : 'PUT',
     });
@@ -76,6 +85,11 @@ export default function ProjectNavbar({ owner, repoName }) {
               <Button
                 onClick={handleClickStar}
                 startIcon={data?.starred ? <StarFilledIcon /> : <StarIcon />}
+                title={
+                  userHasValidSession
+                    ? `Star ${owner}/${repoName}`
+                    : 'You must be signed in to star a repository'
+                }
               >
                 Star
               </Button>
