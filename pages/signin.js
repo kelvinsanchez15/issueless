@@ -79,8 +79,6 @@ export default function SignIn({ providerList }) {
   );
 }
 
-SignIn.getInitialProps = async (context) => {
-  return {
-    providerList: await providers(context),
-  };
-};
+SignIn.getInitialProps = async (context) => ({
+  providerList: await providers(context),
+});
