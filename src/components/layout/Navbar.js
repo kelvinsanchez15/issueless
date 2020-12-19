@@ -7,7 +7,6 @@ import {
   Avatar,
   Menu,
   MenuItem,
-  Badge,
   Divider,
   Button,
   Hidden,
@@ -19,7 +18,6 @@ import {
   Home as HomeIcon,
   Search as ExploreIcon,
   PlayArrow as DemoIcon,
-  NotificationsOutlined as NotificationsOutlinedIcon,
   Add as AddIcon,
   ArrowDropDown as ArrowDropDownIcon,
 } from '@material-ui/icons';
@@ -56,16 +54,11 @@ export default function Navbar() {
   const [session] = useSession();
 
   const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
-  const [createAnchorEl, setCreateAnchorEl] = React.useState(null);
 
   const handleProfileMenuOpen = (e) => setProfileAnchorEl(e.currentTarget);
   const handleProfileMenuClose = () => setProfileAnchorEl(null);
 
-  const handleCreateMenuOpen = (e) => setCreateAnchorEl(e.currentTarget);
-  const handleCreateMenuClose = () => setCreateAnchorEl(null);
-
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   const menuItems = [
@@ -116,40 +109,15 @@ export default function Navbar() {
             ) : (
               <>
                 <IconButton
-                  aria-label="show 17 new notifications"
+                  title="Create new repository"
+                  aria-label="create new repository"
                   color="inherit"
-                >
-                  <Badge badgeContent={17} color="secondary">
-                    <NotificationsOutlinedIcon />
-                  </Badge>
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="create new..."
-                  aria-controls="create-new-menu"
-                  aria-haspopup="true"
-                  onClick={handleCreateMenuOpen}
-                  color="inherit"
+                  href="/new"
+                  component={Link}
+                  naked
                 >
                   <AddIcon />
-                  <ArrowDropDownIcon />
                 </IconButton>
-                <Menu
-                  id="create-new-menu"
-                  anchorEl={createAnchorEl}
-                  getContentAnchorEl={null}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-                  keepMounted
-                  open={Boolean(createAnchorEl)}
-                  onClose={handleCreateMenuClose}
-                >
-                  <MenuItem onClick={handleCreateMenuClose}>
-                    New repository
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem onClick={handleCreateMenuClose}>New Issue</MenuItem>
-                </Menu>
 
                 <IconButton
                   edge="end"
