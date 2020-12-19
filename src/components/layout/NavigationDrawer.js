@@ -14,6 +14,7 @@ import {
   Close as CloseIcon,
   Settings as SettingsIcon,
   ExitToApp as ExitToAppIcon,
+  Add as AddIcon,
 } from '@material-ui/icons';
 import Link from 'src/components/Link';
 import { signOut } from 'next-auth/client';
@@ -88,7 +89,20 @@ export default function NavigationDrawer({
                   src={session.user.image || ''}
                 />
               </ListItemAvatar>
-              <ListItemText primary="PROFILE" />
+              <ListItemText primary="YOUR PROFILE" />
+            </ListItem>
+
+            <ListItem
+              button
+              onClick={onClose}
+              href="/new"
+              component={Link}
+              naked
+            >
+              <ListItemIcon className={classes.listItemIcon}>
+                <AddIcon />
+              </ListItemIcon>
+              <ListItemText primary="NEW REPOSITORY" />
             </ListItem>
 
             <ListItem
