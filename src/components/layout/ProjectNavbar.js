@@ -1,4 +1,5 @@
 import React from 'react';
+import useSWR from 'swr';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -13,8 +14,10 @@ import {
   VisibilityOutlined as WatchIcon,
   ArrowDropDown as ArrowDropDownIcon,
   StarBorderOutlined as StarIcon,
+  Star as StarFilledIcon,
   SettingsOutlined as SettingsIcon,
 } from '@material-ui/icons';
+import fetcher from 'src/utils/fetcher';
 
 const useStyles = makeStyles((theme) => ({
   grow: { flexGrow: 1 },
@@ -28,6 +31,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProjectNavbar({ owner, repoName }) {
   const classes = useStyles();
+  const { data, mutate } = useSWR(
+    `/api/repos/${owner}/${repoName}/stargazers`,
+    fetcher
+  );
+
+  const handleClickStar = async () => {
+    const res = await fetch(`/api/repos/${owner}/${repoName}/stargazers`, {
+      method: data?.starred ? 'DELETE' : 'PUT',
+    });
+    if (!res.ok) {
+      const { message } = await res.json();
+      throw new Error(message);
+    }
+    mutate();
+  };
+
   return (
     <nav>
       <AppBar position="static" color="transparent" elevation={0}>
@@ -54,8 +73,13 @@ export default function ProjectNavbar({ owner, repoName }) {
               <Button>8.4k</Button>
             </ButtonGroup>
             <ButtonGroup className={classes.ml1}>
-              <Button startIcon={<StarIcon />}>Star</Button>
-              <Button>316,419</Button>
+              <Button
+                onClick={handleClickStar}
+                startIcon={data?.starred ? <StarFilledIcon /> : <StarIcon />}
+              >
+                Star
+              </Button>
+              <Button>{0 || data?.stargazers_count}</Button>
             </ButtonGroup>
             <ButtonGroup className={classes.ml1}>
               <Button startIcon={<SettingsIcon />}>Settings</Button>
