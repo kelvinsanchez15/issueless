@@ -24,6 +24,7 @@ export default function IssuesList({ repository }) {
   const classes = useStyles();
   const router = useRouter();
   const { pathname, query } = router;
+  const { page, ...queryWithoutPage } = query;
 
   return (
     <div className={classes.root}>
@@ -35,7 +36,7 @@ export default function IssuesList({ repository }) {
             <IssuesListSubHeader
               repository={repository}
               pathname={pathname}
-              query={query}
+              query={queryWithoutPage}
             />
           }
         >
