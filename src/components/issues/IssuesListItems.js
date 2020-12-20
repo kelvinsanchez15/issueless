@@ -17,7 +17,7 @@ import {
 } from '@material-ui/icons';
 import Link from 'src/components/Link';
 import formatDate from 'src/utils/formatDate';
-import getContrastYIQ from 'src/utils/getContrastYIQ';
+import getLabelStyle from 'src/utils/getLabelStyle';
 
 const useStyles = makeStyles((theme) => ({
   listItemText: {
@@ -78,10 +78,8 @@ export default function IssuesListItems({ repository }) {
                   label={label.name}
                   title={label.description}
                   size="small"
-                  style={{
-                    backgroundColor: `#${label.color}`,
-                    color: getContrastYIQ(label.color),
-                  }}
+                  variant="outlined"
+                  style={getLabelStyle(label.color)}
                 />
               ))}
             </span>

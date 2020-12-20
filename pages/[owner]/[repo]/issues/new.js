@@ -23,7 +23,7 @@ import Alert from '@material-ui/lab/Alert';
 import { useSession } from 'next-auth/client';
 import useSWR from 'swr';
 import fetcher from 'src/utils/fetcher';
-import getContrastYIQ from 'src/utils/getContrastYIQ';
+import getLabelStyle from 'src/utils/getLabelStyle';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -192,10 +192,8 @@ export default function NewIssue() {
                             key={label.name}
                             label={label.name}
                             size="small"
-                            style={{
-                              backgroundColor: `#${label.color}`,
-                              color: getContrastYIQ(label.color),
-                            }}
+                            variant="outlined"
+                            style={getLabelStyle(label.color)}
                           />
                         ))}
                       </div>
