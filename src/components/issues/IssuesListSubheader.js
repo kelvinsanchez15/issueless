@@ -8,14 +8,15 @@ import OpenClosedIssuesButton from './OpenClosedIssuesButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]: {
-      justifyContent: 'center',
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex',
+      justifyContent: 'space-between',
     },
   },
   dropdowns: {
     [theme.breakpoints.down('xs')]: {
+      display: 'flex',
+      justifyContent: 'space-around',
       '& > button > span > span': {
         display: 'none',
       },
