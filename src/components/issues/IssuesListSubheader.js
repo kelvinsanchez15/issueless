@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   dropdowns: {
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
+      padding: theme.spacing(0.5, 0),
       justifyContent: 'space-around',
       '& > button > span > span': {
         display: 'none',
