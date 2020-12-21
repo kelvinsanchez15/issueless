@@ -42,7 +42,7 @@ export default function MyApp({ Component, pageProps }) {
         <Provider session={pageProps.session}>
           <CssBaseline />
           {loading && (
-            <LinearProgress style={{ position: 'absolute', width: '100%' }} />
+            <LinearProgress style={{ position: 'fixed', width: '100%' }} />
           )}
           <div className={classes.root}>
             <Navbar {...pageProps} />

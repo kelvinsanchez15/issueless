@@ -10,7 +10,7 @@ export default function OpenClosedIssuesButton({
   openIssuesCount,
   closedIssuesCount,
 }) {
-  const { owner, repoName } = query;
+  const { owner, repo: repoName } = query;
   return (
     <div>
       <Button
