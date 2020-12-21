@@ -99,11 +99,7 @@ export default function IssuesListItems({ repository }) {
                 />
               ))}
             </span>
-            <Typography
-              variant="subtitle2"
-              color="textSecondary"
-              display="block"
-            >
+            <Typography variant="caption" color="textSecondary" display="block">
               {issue.state === 'open'
                 ? `#${issue.number} 
               opened ${formatDate(issue.createdAt)} 
