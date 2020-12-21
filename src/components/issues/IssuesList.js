@@ -44,6 +44,7 @@ export default function IssuesList({ repository }) {
     <Container className={classes.root}>
       <Paper variant="outlined" className={classes.paper}>
         <List
+          dense
           disablePadding
           subheader={
             // eslint-disable-next-line react/jsx-wrap-multilines
