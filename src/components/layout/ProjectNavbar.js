@@ -8,6 +8,8 @@ import {
   Typography,
   ButtonGroup,
   Button,
+  Hidden,
+  IconButton,
 } from '@material-ui/core';
 import Link from 'src/components/Link';
 import {
@@ -74,31 +76,52 @@ export default function ProjectNavbar({ owner, repoName }) {
             </Link>
           </Typography>
           <div className={classes.grow} />
-          <div>
-            <ButtonGroup className={classes.ml1}>
-              <Button startIcon={<WatchIcon />} endIcon={<ArrowDropDownIcon />}>
-                Watch
-              </Button>
-              <Button>8.4k</Button>
-            </ButtonGroup>
-            <ButtonGroup className={classes.ml1}>
-              <Button
-                onClick={handleClickStar}
-                startIcon={data?.starred ? <StarFilledIcon /> : <StarIcon />}
-                title={
-                  userHasValidSession
-                    ? `Star ${owner}/${repoName}`
-                    : 'You must be signed in to star a repository'
-                }
-              >
-                Star
-              </Button>
-              <Button>{0 || data?.stargazers_count}</Button>
-            </ButtonGroup>
-            <ButtonGroup className={classes.ml1}>
-              <Button startIcon={<SettingsIcon />}>Settings</Button>
-            </ButtonGroup>
-          </div>
+          <Hidden smDown>
+            <div>
+              <ButtonGroup className={classes.ml1}>
+                <Button
+                  startIcon={<WatchIcon />}
+                  endIcon={<ArrowDropDownIcon />}
+                >
+                  Watch
+                </Button>
+                <Button>8.4k</Button>
+              </ButtonGroup>
+              <ButtonGroup className={classes.ml1}>
+                <Button
+                  onClick={handleClickStar}
+                  startIcon={data?.starred ? <StarFilledIcon /> : <StarIcon />}
+                  title={
+                    userHasValidSession
+                      ? `Star ${owner}/${repoName}`
+                      : 'You must be signed in to star a repository'
+                  }
+                >
+                  Star
+                </Button>
+                <Button>{0 || data?.stargazers_count}</Button>
+              </ButtonGroup>
+              <ButtonGroup className={classes.ml1}>
+                <Button
+                  startIcon={<SettingsIcon />}
+                  component={Link}
+                  href={`/${owner}/${repoName}/settings`}
+                  naked
+                >
+                  Settings
+                </Button>
+              </ButtonGroup>
+            </div>
+          </Hidden>
+          <Hidden mdUp>
+            <IconButton
+              component={Link}
+              href={`/${owner}/${repoName}/settings`}
+              naked
+            >
+              <SettingsIcon />
+            </IconButton>
+          </Hidden>
         </Toolbar>
       </AppBar>
     </nav>

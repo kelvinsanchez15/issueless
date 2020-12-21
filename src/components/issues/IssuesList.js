@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, List, Divider } from '@material-ui/core';
+import { Container, Paper, List, Divider } from '@material-ui/core';
 import { Pagination, PaginationItem } from '@material-ui/lab';
 import Link from 'src/components/Link';
 import IssuesListSubHeader from './IssuesListSubheader';
@@ -11,6 +11,20 @@ const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       marginTop: theme.spacing(2),
+    },
+    [theme.breakpoints.down('sm')]: {
+      '& > *': {
+        marginTop: theme.spacing(1),
+      },
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: 0,
+    },
+  },
+  paper: {
+    [theme.breakpoints.down('xs')]: {
+      borderLeftStyle: 'none',
+      borderRightStyle: 'none',
     },
   },
   pagination: {
@@ -27,16 +41,17 @@ export default function IssuesList({ repository }) {
   const { page, ...queryWithoutPage } = query;
 
   return (
-    <div className={classes.root}>
-      <Paper variant="outlined">
+    <Container className={classes.root}>
+      <Paper variant="outlined" className={classes.paper}>
         <List
           disablePadding
           subheader={
             // eslint-disable-next-line react/jsx-wrap-multilines
             <IssuesListSubHeader
-              repository={repository}
               pathname={pathname}
               query={queryWithoutPage}
+              openIssuesCount={repository.openIssuesCount}
+              closedIssuesCount={repository.closedIssuesCount}
             />
           }
         >
@@ -73,6 +88,6 @@ export default function IssuesList({ repository }) {
           />
         )}
       />
-    </div>
+    </Container>
   );
 }

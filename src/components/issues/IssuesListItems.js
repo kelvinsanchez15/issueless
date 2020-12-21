@@ -20,6 +20,11 @@ import formatDate from 'src/utils/formatDate';
 import getLabelStyle from 'src/utils/getLabelStyle';
 
 const useStyles = makeStyles((theme) => ({
+  ListItem: {
+    [theme.breakpoints.down('xs')]: {
+      paddingRight: theme.spacing(2),
+    },
+  },
   listItemText: {
     '& > *': {
       marginRight: theme.spacing(0.5),
@@ -29,12 +34,20 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       marginRight: theme.spacing(0.5),
     },
+    [theme.breakpoints.down('sm')]: {
+      display: 'block',
+    },
   },
   issueLink: {
     color: theme.palette.text.primary,
     '&:hover': {
       color: theme.palette.primary.main,
       textDecoration: 'none',
+    },
+  },
+  listItemSecondaryAction: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
     },
   },
 }));
@@ -47,7 +60,7 @@ export default function IssuesListItems({ repository }) {
   return (
     <>
       {repository.issues.map((issue) => (
-        <ListItem key={issue.id} divider>
+        <ListItem key={issue.id} divider className={classes.ListItem}>
           <ListItemIcon>
             {issue.state === 'open' ? (
               <OpenIssueIcon color="secondary" titleAccess="Open issue" />
@@ -97,7 +110,7 @@ export default function IssuesListItems({ repository }) {
               was closed ${formatDate(issue.closedAt)}`}
             </Typography>
           </ListItemText>
-          <ListItemSecondaryAction>
+          <ListItemSecondaryAction className={classes.listItemSecondaryAction}>
             {issue.comments > 0 && (
               <IconButton aria-label="comments">
                 <Badge badgeContent={issue.comments} color="primary">

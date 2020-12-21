@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Button, Chip } from '@material-ui/core';
+import { Container, Button, Chip, Hidden } from '@material-ui/core';
 import {
   LocalOfferOutlined as LabelIcon,
   Clear as ClearIcon,
@@ -12,6 +12,7 @@ import Link from 'src/components/Link';
 import ProjectNavbar from 'src/components/layout/ProjectNavbar';
 import IssuesList from 'src/components/issues/IssuesList';
 import IssuesFilter from 'src/components/issues/IssuesFilter';
+import OpenClosedIssuesButton from 'src/components/issues/OpenClosedIssuesButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,17 +21,25 @@ const useStyles = makeStyles((theme) => ({
   filterAndButtons: {
     display: 'flex',
     justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column-reverse',
+    },
   },
   buttonsWraper: {
-    '& > *': {
-      marginLeft: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginBottom: theme.spacing(2),
     },
   },
   ml1: {
     marginLeft: theme.spacing(1),
   },
-  clearButton: {
+  mt1: {
     marginTop: theme.spacing(1),
+  },
+  mr2: {
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -152,7 +161,11 @@ export default function Issues({ repository, owner, repoName }) {
           <div className={classes.filterAndButtons}>
             <IssuesFilter />
             <div className={classes.buttonsWraper}>
-              <Button variant="outlined" startIcon={<LabelIcon />}>
+              <Button
+                className={classes.mr2}
+                variant="outlined"
+                startIcon={<LabelIcon />}
+              >
                 Labels
                 <Chip className={classes.ml1} label={9} size="small" />
               </Button>
@@ -163,27 +176,41 @@ export default function Issues({ repository, owner, repoName }) {
                 href={`/${owner}/${repoName}/issues/new`}
                 naked
               >
-                New Issue
+                <Hidden smDown>
+                  <span>New Issue</span>
+                </Hidden>
+                <Hidden mdUp>
+                  <span>New</span>
+                </Hidden>
               </Button>
             </div>
           </div>
+          <div className={classes.mt1}>
+            {shouldRenderClearButton && (
+              <Button
+                startIcon={<ClearIcon />}
+                variant="text"
+                component={Link}
+                href={`/${owner}/${repoName}/issues`}
+                size="small"
+                naked
+              >
+                Clear current search query, filters, and sorts
+              </Button>
+            )}
 
-          {shouldRenderClearButton && (
-            <Button
-              className={classes.clearButton}
-              startIcon={<ClearIcon />}
-              variant="text"
-              component={Link}
-              href={`/${owner}/${repoName}/issues`}
-              size="small"
-              naked
-            >
-              Clear current search query, filters, and sorts
-            </Button>
-          )}
+            <Hidden mdUp>
+              <OpenClosedIssuesButton
+                query={query}
+                openIssuesCount={repository.openIssuesCount}
+                closedIssuesCount={repository.closedIssuesCount}
+              />
+            </Hidden>
+          </div>
         </div>
-        <IssuesList repository={repository} />
       </Container>
+
+      <IssuesList repository={repository} />
     </>
   );
 }
