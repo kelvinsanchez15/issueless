@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: theme.spacing(2),
     },
   },
+  listItemIcon: {
+    minWidth: theme.spacing(6),
+  },
   listItemText: {
     '& > *': {
       marginRight: theme.spacing(0.5),
@@ -61,7 +64,7 @@ export default function IssuesListItems({ repository }) {
     <>
       {repository.issues.map((issue) => (
         <ListItem key={issue.id} divider className={classes.ListItem}>
-          <ListItemIcon>
+          <ListItemIcon className={classes.listItemIcon}>
             {issue.state === 'open' ? (
               <OpenIssueIcon color="secondary" titleAccess="Open issue" />
             ) : (
