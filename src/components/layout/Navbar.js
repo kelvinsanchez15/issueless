@@ -25,10 +25,12 @@ import { signOut, useSession } from 'next-auth/client';
 import NavigationDrawer from 'src/components/layout/NavigationDrawer';
 
 const useStyles = makeStyles((theme) => ({
-  grow: { flexGrow: 1 },
   logo: {
     color: theme.palette.common.white,
     marginRight: theme.spacing(2),
+  },
+  grow: {
+    flexGrow: 1,
   },
   navItem: {
     marginLeft: theme.spacing(2),
@@ -80,122 +82,108 @@ export default function Navbar() {
             <BugReportIcon />
           </IconButton>
 
-          <Hidden smDown>
-            {menuItems.map((item) => (
-              <Button
-                className={classes.mr1}
-                key={item.name}
-                href={item.link}
-                component={Link}
-                variant="text"
-                naked
-              >
-                {item.name}
-              </Button>
-            ))}
-
-            <div className={classes.grow} />
-
-            {!session ? (
-              <Button
-                component={Link}
-                variant="contained"
-                color="primary"
-                href="/signin"
-                naked
-              >
-                Sign in
-              </Button>
-            ) : (
-              <>
-                <IconButton
-                  title="Create new repository"
-                  aria-label="create new repository"
-                  color="inherit"
-                  href="/new"
+          <div className={classes.grow}>
+            <Hidden smDown>
+              {menuItems.map((item) => (
+                <Button
+                  className={classes.mr1}
+                  key={item.name}
+                  href={item.link}
                   component={Link}
+                  variant="text"
                   naked
                 >
-                  <AddIcon />
-                </IconButton>
+                  {item.name}
+                </Button>
+              ))}
+            </Hidden>
+          </div>
 
-                <IconButton
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-controls="primary-search-account-menu"
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-                >
-                  <Avatar
-                    className={classes.avatarSize}
-                    src={session.user.image || ''}
-                  />
-                  <ArrowDropDownIcon />
-                </IconButton>
-                <Menu
-                  id="primary-search-account-menu"
-                  anchorEl={profileAnchorEl}
-                  getContentAnchorEl={null}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-                  keepMounted
-                  open={Boolean(profileAnchorEl)}
-                  onClose={handleProfileMenuClose}
-                >
-                  <MenuItem
-                    className={classes.menuHeader}
-                    href={`/${session.username}`}
-                    component={Link}
-                    naked
-                    onClick={handleProfileMenuClose}
-                  >
-                    <div>Signed in as</div>
-                    <div>
-                      <strong>{session.username}</strong>
-                    </div>
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem
-                    href={`/${session.username}`}
-                    component={Link}
-                    naked
-                    onClick={handleProfileMenuClose}
-                  >
-                    Your profile
-                  </MenuItem>
-                  <MenuItem onClick={handleProfileMenuClose}>
-                    Your stars
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem
-                    href="/settings"
-                    component={Link}
-                    naked
-                    onClick={handleProfileMenuClose}
-                  >
-                    Settings
-                  </MenuItem>
-                  <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
-                </Menu>
-              </>
-            )}
-          </Hidden>
-
-          <Hidden mdUp>
-            <div className={classes.grow} />
-            {!session && (
-              <Button
-                className={classes.mr1}
+          {!session ? (
+            <Button
+              className={classes.mr1}
+              component={Link}
+              variant="contained"
+              color="primary"
+              href="/signin"
+              naked
+            >
+              Sign in
+            </Button>
+          ) : (
+            <Hidden smDown implementation="css">
+              <IconButton
+                title="Create new repository"
+                aria-label="create new repository"
+                color="inherit"
+                href="/new"
                 component={Link}
-                variant="contained"
-                color="primary"
-                href="/signin"
                 naked
               >
-                Sign in
-              </Button>
-            )}
+                <AddIcon />
+              </IconButton>
+
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls="primary-search-account-menu"
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <Avatar
+                  className={classes.avatarSize}
+                  src={session.user.image || ''}
+                />
+                <ArrowDropDownIcon />
+              </IconButton>
+              <Menu
+                id="primary-search-account-menu"
+                anchorEl={profileAnchorEl}
+                getContentAnchorEl={null}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                keepMounted
+                open={Boolean(profileAnchorEl)}
+                onClose={handleProfileMenuClose}
+              >
+                <MenuItem
+                  className={classes.menuHeader}
+                  href={`/${session.username}`}
+                  component={Link}
+                  naked
+                  onClick={handleProfileMenuClose}
+                >
+                  <div>Signed in as</div>
+                  <div>
+                    <strong>{session.username}</strong>
+                  </div>
+                </MenuItem>
+                <Divider />
+                <MenuItem
+                  href={`/${session.username}`}
+                  component={Link}
+                  naked
+                  onClick={handleProfileMenuClose}
+                >
+                  Your profile
+                </MenuItem>
+                <MenuItem onClick={handleProfileMenuClose}>Your stars</MenuItem>
+                <Divider />
+                <MenuItem
+                  href="/settings"
+                  component={Link}
+                  naked
+                  onClick={handleProfileMenuClose}
+                >
+                  Settings
+                </MenuItem>
+                <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
+              </Menu>
+            </Hidden>
+          )}
+
+          <Hidden mdUp implementation="css">
             <IconButton
               onClick={handleDrawerToggle}
               aria-label="Open Navigation"

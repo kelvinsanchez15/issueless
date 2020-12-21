@@ -34,7 +34,7 @@ export default function IssuesListSubHeader({
   const classes = useStyles();
   return (
     <ListSubheader component="div" className={classes.root} disableSticky>
-      <Hidden smDown>
+      <Hidden smDown implementation="css">
         <OpenClosedIssuesButton
           query={query}
           openIssuesCount={openIssuesCount}

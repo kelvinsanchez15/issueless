@@ -76,7 +76,7 @@ export default function ProjectNavbar({ owner, repoName }) {
             </Link>
           </Typography>
           <div className={classes.grow} />
-          <Hidden smDown>
+          <Hidden smDown implementation="css">
             <div>
               <ButtonGroup className={classes.ml1}>
                 <Button
@@ -113,7 +113,7 @@ export default function ProjectNavbar({ owner, repoName }) {
               </ButtonGroup>
             </div>
           </Hidden>
-          <Hidden mdUp>
+          <Hidden mdUp implementation="css">
             <IconButton
               component={Link}
               href={`/${owner}/${repoName}/settings`}

@@ -176,10 +176,10 @@ export default function Issues({ repository, owner, repoName }) {
                 href={`/${owner}/${repoName}/issues/new`}
                 naked
               >
-                <Hidden smDown>
+                <Hidden smDown implementation="css">
                   <span>New Issue</span>
                 </Hidden>
-                <Hidden mdUp>
+                <Hidden mdUp implementation="css">
                   <span>New</span>
                 </Hidden>
               </Button>
@@ -199,7 +199,7 @@ export default function Issues({ repository, owner, repoName }) {
               </Button>
             )}
 
-            <Hidden mdUp>
+            <Hidden mdUp implementation="css">
               <OpenClosedIssuesButton
                 query={query}
                 openIssuesCount={repository.openIssuesCount}
