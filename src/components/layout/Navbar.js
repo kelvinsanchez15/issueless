@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -131,10 +132,14 @@ export default function Navbar() {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <Avatar
-                  className={classes.avatarSize}
-                  src={session.user.image || ''}
-                />
+                <Avatar className={classes.avatarSize}>
+                  <Image
+                    src={session.user.image}
+                    width={24}
+                    height={24}
+                    priority
+                  />
+                </Avatar>
                 <ArrowDropDownIcon />
               </IconButton>
               <Menu

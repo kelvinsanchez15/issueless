@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -82,10 +83,9 @@ export default function NavigationDrawer({
               naked
             >
               <ListItemAvatar>
-                <Avatar
-                  className={classes.avatarSize}
-                  src={session.user.image || ''}
-                />
+                <Avatar className={classes.avatarSize}>
+                  <Image src={session.user.image} width={24} height={24} />
+                </Avatar>
               </ListItemAvatar>
               <ListItemText primary="YOUR PROFILE" />
             </ListItem>

@@ -12,10 +12,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(4),
   },
-  avatar: {
-    width: 'auto',
-    height: 'auto',
-  },
   wrapper: {
     display: 'flex',
     alignItems: 'center',

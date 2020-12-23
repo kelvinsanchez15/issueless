@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import * as Yup from 'yup';
@@ -56,7 +57,12 @@ export default function IssueComment({
           <>
             <CardHeader
               className={classes.cardHeader}
-              avatar={<Avatar src={image} aria-label="user image" />}
+              avatar={
+                // eslint-disable-next-line react/jsx-wrap-multilines
+                <Avatar aria-label="user image">
+                  <Image src={image} width={40} height={40} />
+                </Avatar>
+              }
               action={
                 userHasValidSession &&
                 isCommentOwnerOrRepoOwner && (
@@ -121,7 +127,12 @@ export default function IssueComment({
                 <Form onSubmit={handleSubmit} className={classes.form}>
                   <CardHeader
                     className={classes.cardHeader}
-                    avatar={<Avatar src={image} aria-label="user image" />}
+                    avatar={
+                      // eslint-disable-next-line react/jsx-wrap-multilines
+                      <Avatar aria-label="user image">
+                        <Image src={image} width={40} height={40} />
+                      </Avatar>
+                    }
                     title="Make your changes below"
                   />
                   <CardContent>

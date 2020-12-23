@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
@@ -57,7 +58,12 @@ export default function IssueDetails({
           <>
             <CardHeader
               className={classes.cardHeader}
-              avatar={<Avatar src={image} aria-label="user image" />}
+              avatar={
+                // eslint-disable-next-line react/jsx-wrap-multilines
+                <Avatar aria-label="user image">
+                  <Image src={image} width={40} height={40} priority />
+                </Avatar>
+              }
               action={
                 userHasValidSession &&
                 isIssueAuthorOrRepoOwner && (
@@ -122,7 +128,12 @@ export default function IssueDetails({
                 <Form onSubmit={handleSubmit} className={classes.form}>
                   <CardHeader
                     className={classes.cardHeader}
-                    avatar={<Avatar src={image} aria-label="user image" />}
+                    avatar={
+                      // eslint-disable-next-line react/jsx-wrap-multilines
+                      <Avatar aria-label="user image">
+                        <Image src={image} width={40} height={40} />
+                      </Avatar>
+                    }
                     title="Make your changes below"
                   />
                   <CardContent>

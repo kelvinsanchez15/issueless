@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'src/components/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -61,7 +62,9 @@ export default function Explore({ users }) {
             {users.map((user) => (
               <ListItem key={user.id} divider>
                 <ListItemIcon>
-                  <Avatar src={user.image} />
+                  <Avatar>
+                    <Image src={user.image} width={40} height={40} />
+                  </Avatar>
                 </ListItemIcon>
                 <ListItemText disableTypography>
                   <Typography variant="h6">

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { Formik, Form, Field } from 'formik';
@@ -105,7 +106,12 @@ export default function NewComment({ state, issueAuthor, image }) {
           <Form onSubmit={handleSubmit} className={classes.form}>
             <CardHeader
               className={classes.cardHeader}
-              avatar={<Avatar src={image} aria-label="user image" />}
+              avatar={
+                // eslint-disable-next-line react/jsx-wrap-multilines
+                <Avatar aria-label="user image">
+                  <Image src={image} width={40} height={40} />
+                </Avatar>
+              }
               title="Write"
             />
             <CardContent className={classes.cardContent}>
