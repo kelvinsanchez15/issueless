@@ -79,6 +79,7 @@ export default function Navbar() {
             edge="start"
             href="/"
             component={Link}
+            aria-label="Homepage"
           >
             <BugReportIcon />
           </IconButton>
