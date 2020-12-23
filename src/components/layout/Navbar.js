@@ -85,7 +85,7 @@ export default function Navbar() {
           </IconButton>
 
           <div className={classes.grow}>
-            <Hidden smDown>
+            <Hidden smDown implementation="css">
               {menuItems.map((item) => (
                 <Button
                   className={classes.mr1}
