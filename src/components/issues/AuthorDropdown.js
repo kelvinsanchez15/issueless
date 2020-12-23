@@ -41,8 +41,8 @@ export default function AuthorDropdown({ pathname, query }) {
   return (
     <>
       <Button
-        aria-label="Filter users"
-        aria-controls="filter-users"
+        aria-label="Filter users by author"
+        aria-controls="filter-users-by-author"
         aria-haspopup="true"
         title="Author"
         onClick={handleMenuOpen}
@@ -51,7 +51,7 @@ export default function AuthorDropdown({ pathname, query }) {
         Author
       </Button>
       <Menu
-        id="filter-users"
+        id="filter-users-by-author"
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

@@ -41,8 +41,8 @@ export default function AssigneeDropdown({ pathname, query }) {
   return (
     <>
       <Button
-        aria-label="Filter users"
-        aria-controls="filter-users"
+        aria-label="Filter users by assignee"
+        aria-controls="filter-users-by-assignee"
         aria-haspopup="true"
         title="Assignee"
         onClick={handleMenuOpen}
@@ -51,7 +51,7 @@ export default function AssigneeDropdown({ pathname, query }) {
         Assignee
       </Button>
       <Menu
-        id="filter-users"
+        id="filter-users-by-assignee"
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

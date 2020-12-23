@@ -73,8 +73,8 @@ export default function LabelDropdown({ pathname, query }) {
   return (
     <>
       <Button
-        aria-label="Sort by"
-        aria-controls="sort-issues"
+        aria-label="Filter by label"
+        aria-controls="filter-issues-by-label"
         aria-haspopup="true"
         title="Label"
         onClick={handleMenuOpen}
@@ -84,7 +84,7 @@ export default function LabelDropdown({ pathname, query }) {
       </Button>
       <Menu
         className={classes.menu}
-        id="sort-issues"
+        id="filter-issues-by-label"
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

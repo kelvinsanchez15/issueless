@@ -76,8 +76,8 @@ export default function IssuesFilter() {
         <>
           <Button
             className={classes.filterButton}
-            aria-label="Sort by"
-            aria-controls="sort-issues"
+            aria-label="Sort by state"
+            aria-controls="sort-issues-by-state"
             aria-haspopup="true"
             title="Filter"
             onClick={handleMenuOpen}
@@ -86,7 +86,7 @@ export default function IssuesFilter() {
             Filters
           </Button>
           <Menu
-            id="sort-issues"
+            id="sort-issues-by-state"
             anchorEl={anchorEl}
             getContentAnchorEl={null}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
