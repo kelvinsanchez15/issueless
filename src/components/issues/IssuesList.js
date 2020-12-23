@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Paper, List, Divider } from '@material-ui/core';
+import { Container, Paper, List } from '@material-ui/core';
 import { Pagination, PaginationItem } from '@material-ui/lab';
 import Link from 'src/components/Link';
 import IssuesListSubHeader from './IssuesListSubheader';
@@ -56,7 +56,6 @@ export default function IssuesList({ repository }) {
             />
           }
         >
-          <Divider />
           {repository.issues.length === 0 ? (
             <IssuesFallback
               openIssuesCount={repository.openIssuesCount}

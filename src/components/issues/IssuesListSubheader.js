@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       justifyContent: 'space-between',
     },
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   dropdowns: {
     [theme.breakpoints.down('xs')]: {
@@ -33,7 +34,7 @@ export default function IssuesListSubHeader({
 }) {
   const classes = useStyles();
   return (
-    <ListSubheader component="div" className={classes.root} disableSticky>
+    <ListSubheader className={classes.root} disableSticky>
       <Hidden smDown implementation="css">
         <OpenClosedIssuesButton
           query={query}
