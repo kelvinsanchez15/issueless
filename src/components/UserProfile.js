@@ -21,7 +21,7 @@ export default function UserProfile({ user }) {
   return (
     <>
       <Avatar alt={user.username} className={classes.avatar}>
-        <Image src={user.image} width={260} height={260} priority />
+        <Image src={user.image} width={300} height={300} priority />
       </Avatar>
       <div className={classes.cardNamesWrapper}>
         <Typography variant="h5">{user.name}</Typography>
