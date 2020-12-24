@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export async function getServerSideProps({
+  res,
   params: { owner, repo: repoName },
   query: { author, label, assignee, state, sort, page = 1, limit },
 }) {
@@ -135,6 +136,12 @@ export async function getServerSideProps({
     const closedAt = issue.closedAt ? issue.closedAt.toISOString() : null;
     return { ...issue, createdAt, updatedAt, closedAt };
   });
+
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=1, stale-while-revalidate=59'
+  );
+
   return {
     props: { repository, owner, repoName },
   };
