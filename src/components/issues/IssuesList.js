@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { Container, Paper, List } from '@material-ui/core';
 import { Pagination, PaginationItem } from '@material-ui/lab';
-import Link from 'src/components/Link';
+import { NextLinkComposed } from 'src/components/Link';
 import IssuesListSubHeader from './IssuesListSubheader';
 import IssuesListItems from './IssuesListItems';
 import IssuesFallback from './IssuesFallback';
@@ -73,15 +73,14 @@ export default function IssuesList({ repository }) {
         shape="rounded"
         renderItem={(item) => (
           <PaginationItem
-            href={{
+            to={{
               pathname,
               query: {
                 ...query,
                 page: item.page,
               },
             }}
-            component={Link}
-            naked
+            component={NextLinkComposed}
             query={query}
             item={item}
             {...item}

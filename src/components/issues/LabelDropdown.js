@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, Typography } from '@material-ui/core';
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
-import Link from 'src/components/Link';
+import { NextLinkComposed } from 'src/components/Link';
 
 const labels = [
   {
@@ -96,15 +96,14 @@ export default function LabelDropdown({ pathname, query }) {
         {labels.map((label) => (
           <MenuItem
             key={label.name}
-            component={Link}
-            href={{
+            component={NextLinkComposed}
+            to={{
               pathname,
               query: { ...query, label: label.name },
             }}
             onClick={handleMenuClose}
             selected={query.label === label.name}
             color="inherit"
-            naked
           >
             <span
               className={classes.labelColor}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
-import Link from 'src/components/Link';
+import { NextLinkComposed } from 'src/components/Link';
 
 const menuItems = [
   {
@@ -52,15 +52,14 @@ export default function SortDropdown({ pathname, query }) {
         {menuItems.map((item) => (
           <MenuItem
             key={item.text}
-            component={Link}
-            href={{
+            component={NextLinkComposed}
+            to={{
               pathname,
               query: { ...query, sort: item.sort },
             }}
             onClick={handleMenuClose}
             selected={query.sort === item.sort}
             color="inherit"
-            naked
           >
             {item.text}
           </MenuItem>

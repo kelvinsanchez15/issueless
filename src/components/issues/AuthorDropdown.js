@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
-import Link from 'src/components/Link';
+import { NextLinkComposed } from 'src/components/Link';
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -73,14 +73,13 @@ export default function AuthorDropdown({ pathname, query }) {
         {author && (
           <MenuItem
             className={classes.menuItem}
-            component={Link}
-            href={{
+            component={NextLinkComposed}
+            to={{
               pathname,
               query: { ...query, author },
             }}
             onClick={handleMenuClose}
             color="inherit"
-            naked
           >
             <Typography variant="body1">{`author:${author}`}</Typography>
             <Typography variant="subtitle2" color="textSecondary">
