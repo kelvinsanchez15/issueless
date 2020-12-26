@@ -20,6 +20,7 @@ import formatDate from 'src/utils/formatDate';
 import { useSession } from 'next-auth/client';
 import useSWR from 'swr';
 import fetcher from 'src/utils/fetcher';
+import Markdown from 'src/components/Markdown';
 
 const useStyles = makeStyles((theme) => ({
   cardHeader: {
@@ -84,9 +85,7 @@ export default function IssueComment({
               }
             />
             <CardContent>
-              <Typography paragraph style={{ whiteSpace: 'pre-wrap' }}>
-                {body}
-              </Typography>
+              <Markdown content={body} />
             </CardContent>
           </>
         ) : (
