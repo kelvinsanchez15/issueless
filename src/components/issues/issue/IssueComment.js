@@ -25,9 +25,14 @@ import Markdown from 'src/components/Markdown';
 const useStyles = makeStyles((theme) => ({
   cardHeader: {
     backgroundColor: theme.palette.grey.A400,
+    padding: theme.spacing(1, 2),
   },
   cardActions: {
     justifyContent: 'flex-end',
+  },
+  avatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
   },
 }));
 
@@ -60,8 +65,8 @@ export default function IssueComment({
               className={classes.cardHeader}
               avatar={
                 // eslint-disable-next-line react/jsx-wrap-multilines
-                <Avatar aria-label="user image">
-                  <Image src={image} width={40} height={40} />
+                <Avatar className={classes.avatar} aria-label="user image">
+                  <Image src={image} width={32} height={32} />
                 </Avatar>
               }
               action={

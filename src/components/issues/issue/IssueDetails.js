@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   cardActions: {
     justifyContent: 'flex-end',
   },
+  avatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+  },
 }));
 
 export default function IssueDetails({
@@ -61,8 +65,8 @@ export default function IssueDetails({
               className={classes.cardHeader}
               avatar={
                 // eslint-disable-next-line react/jsx-wrap-multilines
-                <Avatar aria-label="user image">
-                  <Image src={image} width={40} height={40} priority />
+                <Avatar className={classes.avatar} aria-label="user image">
+                  <Image src={image} width={32} height={32} priority />
                 </Avatar>
               }
               action={
