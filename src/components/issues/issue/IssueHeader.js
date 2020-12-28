@@ -38,11 +38,20 @@ const useStyles = makeStyles((theme) => ({
   headerShow: {
     display: 'flex',
     justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column-reverse',
+      '& > *': {
+        marginBottom: theme.spacing(1),
+      },
+    },
   },
   headerActions: {
-    '& > *': {
-      marginLeft: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: theme.spacing(1),
     },
+  },
+  mr1: {
+    marginRight: theme.spacing(1),
   },
   labels: {
     margin: theme.spacing(1, 0),
@@ -52,9 +61,21 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     display: 'flex',
+    marginBottom: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      '& > *': {
+        marginBottom: theme.spacing(1),
+      },
+    },
   },
   field: {
     flex: 'auto',
+    [theme.breakpoints.up('md')]: {
+      '& > div': {
+        marginRight: theme.spacing(2),
+      },
+    },
   },
 }));
 
@@ -92,7 +113,11 @@ export default function IssueHeader({
           </Typography>
           <div className={classes.headerActions}>
             {userHasValidSession && isIssueAuthorOrRepoOwner && (
-              <Button variant="outlined" onClick={() => setShowHeader(false)}>
+              <Button
+                className={classes.mr1}
+                variant="outlined"
+                onClick={() => setShowHeader(false)}
+              >
                 Edit
               </Button>
             )}
@@ -158,6 +183,7 @@ export default function IssueHeader({
 
                 <div className={classes.headerActions}>
                   <Button
+                    className={classes.mr1}
                     variant="contained"
                     color="secondary"
                     type="submit"
