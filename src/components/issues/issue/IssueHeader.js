@@ -4,7 +4,14 @@ import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import * as Yup from 'yup';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Chip, Divider, Snackbar } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  Chip,
+  Divider,
+  Snackbar,
+  Hidden,
+} from '@material-ui/core';
 import {
   ErrorOutlineOutlined as OpenIssueIcon,
   CheckCircleOutline as ClosedIssueIcon,
@@ -12,6 +19,7 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import Link from 'src/components/Link';
 import formatDate from 'src/utils/formatDate';
+import getLabelStyle from 'src/utils/getLabelStyle';
 import { useSession } from 'next-auth/client';
 import useSWR from 'swr';
 import fetcher from 'src/utils/fetcher';
@@ -36,6 +44,12 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
     },
   },
+  labels: {
+    margin: theme.spacing(1, 0),
+    '& > *': {
+      margin: theme.spacing(0, 0.5, 0.5, 0),
+    },
+  },
   form: {
     display: 'flex',
   },
@@ -48,6 +62,7 @@ export default function IssueHeader({
   title,
   number,
   state,
+  labels,
   createdAt,
   issueAuthor,
 }) {
@@ -185,6 +200,21 @@ export default function IssueHeader({
       <Snackbar open={errorAlert.open} autoHideDuration={300}>
         <Alert severity="error">{errorAlert.message}</Alert>
       </Snackbar>
+
+      <Hidden mdUp implementation="css">
+        <div className={classes.labels}>
+          {labels.map((label) => (
+            <Chip
+              key={label.id}
+              label={label.name}
+              title={label.description}
+              size="small"
+              variant="outlined"
+              style={getLabelStyle(label.color)}
+            />
+          ))}
+        </div>
+      </Hidden>
 
       <Divider />
     </div>

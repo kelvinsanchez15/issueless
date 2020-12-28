@@ -143,6 +143,7 @@ export default function Issue({ issue: issueInitialData }) {
             title={issue.title}
             number={issue.number}
             state={issue.state}
+            labels={issue.labels}
             createdAt={issue.createdAt}
             issueAuthor={issue.user.username}
           />
