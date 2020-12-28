@@ -38,6 +38,12 @@ const theme = responsiveFontSizes(
           borderColor: 'rgba(255, 255, 255, 0.12)',
         },
       },
+      MuiCardHeader: {
+        action: {
+          marginTop: -4,
+          marginBottom: -4,
+        },
+      },
     },
   })
 );
