@@ -24,12 +24,17 @@ const useStyles = makeStyles((theme) => ({
   },
   cardHeader: {
     backgroundColor: theme.palette.grey.A400,
+    padding: theme.spacing(1, 2),
   },
   cardContent: {
     paddingBottom: 0,
   },
   cardActions: {
     justifyContent: 'flex-end',
+  },
+  avatar: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
   },
 }));
 
@@ -108,8 +113,8 @@ export default function NewComment({ state, issueAuthor, image }) {
               className={classes.cardHeader}
               avatar={
                 // eslint-disable-next-line react/jsx-wrap-multilines
-                <Avatar aria-label="user image">
-                  <Image src={image} width={40} height={40} />
+                <Avatar className={classes.avatar} aria-label="user image">
+                  <Image src={image} width={32} height={32} />
                 </Avatar>
               }
               title="Write"

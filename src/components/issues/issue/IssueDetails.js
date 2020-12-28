@@ -27,6 +27,7 @@ import Markdown from 'src/components/Markdown';
 const useStyles = makeStyles((theme) => ({
   cardHeader: {
     backgroundColor: theme.palette.grey.A400,
+    padding: theme.spacing(1, 2),
   },
   cardActions: {
     justifyContent: 'flex-end',
