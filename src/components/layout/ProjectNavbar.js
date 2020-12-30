@@ -119,6 +119,7 @@ export default function ProjectNavbar({ owner, repoName }) {
               href={`/${owner}/${repoName}/settings`}
               naked
               aria-label="Settings"
+              title="Settings"
             >
               <SettingsIcon />
             </IconButton>
