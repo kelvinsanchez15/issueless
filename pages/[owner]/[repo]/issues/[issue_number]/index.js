@@ -192,6 +192,7 @@ export default function Issue({ issue: issueInitialData }) {
 
                 <ListItem divider>
                   <ListItemText
+                    disableTypography
                     primary="Labels"
                     secondary={
                       issue.labels.length > 0 ? (
