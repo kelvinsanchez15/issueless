@@ -13,6 +13,7 @@ import {
   Button,
   Snackbar,
   StepConnector,
+  Chip,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import {
@@ -29,12 +30,19 @@ import NewComment from 'src/components/issues/issue/NewComment';
 import getIssueAndComments from 'src/utils/db/getIssueAndComments';
 import useSWR from 'swr';
 import fetcher from 'src/utils/fetcher';
+import getLabelStyle from 'src/utils/getLabelStyle';
 
 const prisma = new PrismaClient();
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
+  },
+  labels: {
+    paddingTop: theme.spacing(0.5),
+    '& > *': {
+      margin: theme.spacing(0, 0.5, 0.5, 0),
+    },
   },
 }));
 
@@ -105,6 +113,7 @@ export default function Issue({ issue: issueInitialData }) {
   );
   const userHasValidSession = Boolean(session);
   const isRepoOwner = session?.username === owner;
+  const userHasPermission = userHasValidSession && isRepoOwner;
 
   const handleIssueDelete = async () => {
     setErrorAlert({ ...errorAlert, open: false });
@@ -180,15 +189,36 @@ export default function Issue({ issue: issueInitialData }) {
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
+
                 <ListItem divider>
-                  <ListItemText primary="Labels" secondary="None yet" />
+                  <ListItemText
+                    primary="Labels"
+                    secondary={
+                      issue.labels.length > 0 ? (
+                        <div className={classes.labels}>
+                          {issue.labels.map((label) => (
+                            <Chip
+                              key={label.name}
+                              label={label.name}
+                              size="small"
+                              variant="outlined"
+                              style={getLabelStyle(label.color)}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        'None yet'
+                      )
+                    }
+                  />
                   <ListItemSecondaryAction>
                     <IconButton edge="end" aria-label="select labels">
                       <SettingsIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
-                {userHasValidSession && isRepoOwner && (
+
+                {userHasPermission && (
                   <ListItem>
                     <Button
                       onClick={handleIssueDelete}
