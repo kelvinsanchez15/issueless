@@ -83,10 +83,10 @@ export default function User({ user }) {
       </Head>
       <Container className={classes.root}>
         <Grid container spacing={4}>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <UserProfile user={user} />
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={12} md={9}>
             <div className={classes.wrapper}>
               <Typography className={classes.title} variant="h5">
                 Repositories:
