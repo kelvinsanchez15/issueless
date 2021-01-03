@@ -14,6 +14,7 @@ import {
   Snackbar,
   StepConnector,
   Chip,
+  Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import {
@@ -193,7 +194,12 @@ export default function Issue({ issue: issueInitialData }) {
                 <ListItem divider>
                   <ListItemText
                     disableTypography
-                    primary="Labels"
+                    primary={
+                      // eslint-disable-next-line react/jsx-wrap-multilines
+                      <Typography color="textPrimary" variant="body1">
+                        Labels
+                      </Typography>
+                    }
                     secondary={
                       issue.labels.length > 0 ? (
                         <div className={classes.labels}>
@@ -208,7 +214,9 @@ export default function Issue({ issue: issueInitialData }) {
                           ))}
                         </div>
                       ) : (
-                        'None yet'
+                        <Typography color="textSecondary" variant="body2">
+                          None yet
+                        </Typography>
                       )
                     }
                   />
