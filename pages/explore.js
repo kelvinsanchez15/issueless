@@ -14,6 +14,7 @@ import {
   Avatar,
 } from '@material-ui/core';
 import { PrismaClient } from '@prisma/client';
+import formatDate from 'src/utils/formatDate';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,12 +34,32 @@ const prisma = new PrismaClient();
 
 export async function getStaticProps() {
   try {
-    const users = await prisma.user.findMany({
-      select: { id: true, name: true, username: true, bio: true, image: true },
+    let repos = await prisma.repository.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        createdAt: true,
+        user: {
+          select: {
+            username: true,
+            image: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 30,
     });
-    if (!users) return { notFound: true };
+    if (!repos) return { notFound: true };
+    // Parse dates to avoid serializable error
+    repos = repos.map((repo) => {
+      const createdAt = repo.createdAt.toISOString();
+      return { ...repo, createdAt };
+    });
     return {
-      props: { users },
+      props: { repos },
       revalidate: 2,
     };
   } finally {
@@ -46,7 +67,7 @@ export async function getStaticProps() {
   }
 }
 
-export default function Explore({ users }) {
+export default function Explore({ repos }) {
   const classes = useStyles();
   return (
     <>
@@ -59,25 +80,26 @@ export default function Explore({ users }) {
         <Paper className={classes.root}>
           <List disablePadding>
             <Divider />
-            {users.map((user) => (
-              <ListItem key={user.id} divider>
+            {repos.map((repo) => (
+              <ListItem key={repo.id} divider>
                 <ListItemIcon>
                   <Avatar>
-                    <Image src={user.image} width={40} height={40} />
+                    <Image src={repo.user.image} width={40} height={40} />
                   </Avatar>
                 </ListItemIcon>
                 <ListItemText disableTypography>
                   <Typography variant="h6">
-                    <Link href={`/${user.username}`}>{user.name}</Link>
+                    <Link href={`/${repo.user.username}/${repo.name}/issues`}>
+                      {repo.name}
+                    </Link>
                   </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    color="textSecondary"
-                    gutterBottom
-                  >
-                    {user.username}
+                  <Typography variant="body1" gutterBottom>
+                    {repo.description}
                   </Typography>
-                  <Typography variant="body1">{user.bio}</Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {`Created by ${repo.user.username} 
+                    ${formatDate(repo.createdAt)}`}
+                  </Typography>
                 </ListItemText>
               </ListItem>
             ))}
