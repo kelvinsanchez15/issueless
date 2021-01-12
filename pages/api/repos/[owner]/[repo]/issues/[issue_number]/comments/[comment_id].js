@@ -5,7 +5,7 @@ const handler = async (req, res) => {
   const { username: loggedUser } = req.session;
   const { owner: repoOwner, comment_id: commentId } = req.query;
 
-  const comment = await prisma.comment.findOne({
+  const comment = await prisma.comment.findUnique({
     where: { id: Number(commentId) },
     select: { user: { select: { username: true } } },
   });

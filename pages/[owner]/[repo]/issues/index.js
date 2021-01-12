@@ -73,12 +73,12 @@ export async function getServerSideProps({
   const take = limit || 15;
   const skip = (page - 1) * take;
 
-  const user = await prisma.user.findOne({
+  const user = await prisma.user.findUnique({
     where: { username: owner },
     select: { id: true },
   });
   if (!user) return { notFound: true };
-  const repository = await prisma.repository.findOne({
+  const repository = await prisma.repository.findUnique({
     where: {
       repositories_name_owner_id_key: { name: repoName, ownerId: user.id },
     },

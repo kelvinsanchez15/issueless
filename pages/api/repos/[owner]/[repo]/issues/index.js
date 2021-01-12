@@ -13,7 +13,7 @@ const handler = async (req, res) => {
   const { username: loggedUser } = req.session;
   const isRepoOwner = loggedUser === repoOwner;
 
-  const user = await prisma.user.findOne({
+  const user = await prisma.user.findUnique({
     where: { username: repoOwner },
     select: { id: true },
   });
@@ -21,7 +21,7 @@ const handler = async (req, res) => {
     res.status(404).json({ message: 'Not found' });
     return;
   }
-  const repository = await prisma.repository.findOne({
+  const repository = await prisma.repository.findUnique({
     where: {
       repositories_name_owner_id_key: {
         name: repoName,

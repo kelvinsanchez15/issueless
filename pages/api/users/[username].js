@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
   const { username } = req.query;
   try {
-    const user = await prisma.user.findOne({ where: { username } });
+    const user = await prisma.user.findUnique({ where: { username } });
     if (!user) return res.status(404).json({ message: 'Not found' });
     return res.json(user);
   } catch (error) {

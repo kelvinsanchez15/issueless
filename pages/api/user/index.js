@@ -7,7 +7,7 @@ const handler = async (req, res) => {
   switch (req.method) {
     case 'GET':
       try {
-        const user = await prisma.user.findOne({ where: { id: userId } });
+        const user = await prisma.user.findUnique({ where: { id: userId } });
         res.json(user);
       } catch (error) {
         res.status(400).json({ message: 'Something went wrong' });
@@ -34,7 +34,7 @@ const handler = async (req, res) => {
     case 'DELETE':
       try {
         const { username, verification } = req.body;
-        const user = await prisma.user.findOne({ where: { username } });
+        const user = await prisma.user.findUnique({ where: { username } });
         if (!user || user.id !== userId) {
           res.status(400).json({ message: 'Please provide a valid username' });
           return;

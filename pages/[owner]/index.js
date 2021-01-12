@@ -40,7 +40,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params: { owner } }) {
   try {
-    const user = await prisma.user.findOne({
+    const user = await prisma.user.findUnique({
       where: { username: owner },
       select: {
         image: true,

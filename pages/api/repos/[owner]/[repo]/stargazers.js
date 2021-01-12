@@ -3,7 +3,7 @@ import { getSession } from 'next-auth/client';
 
 export default async function handler(req, res) {
   const { owner, repo: repoName } = req.query;
-  const user = await prisma.user.findOne({
+  const user = await prisma.user.findUnique({
     where: { username: owner },
     select: { id: true },
   });
@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     res.status(404).json({ message: 'Not found' });
     return;
   }
-  const repository = await prisma.repository.findOne({
+  const repository = await prisma.repository.findUnique({
     where: {
       repositories_name_owner_id_key: {
         name: repoName,

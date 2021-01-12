@@ -9,7 +9,7 @@ export default async function handler(req, res) {
       try {
         // Get public repo: /api/{owner}]/{repo}
         const repository = await prisma.user
-          .findOne({ where: { username: owner } })
+          .findUnique({ where: { username: owner } })
           .repositories({
             where: { name: repoName },
             include: { user: true, stars: true },
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
           return;
         }
         const userId = Number(session.userId);
-        const user = await prisma.user.findOne({
+        const user = await prisma.user.findUnique({
           where: { username: owner },
           select: { id: true },
         });
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
           return;
         }
         const userId = Number(session.userId);
-        const user = await prisma.user.findOne({
+        const user = await prisma.user.findUnique({
           where: { username: owner },
           select: { id: true },
         });
