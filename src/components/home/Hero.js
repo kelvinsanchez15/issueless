@@ -62,15 +62,21 @@ export default function Hero() {
                 Sign in
               </Button>
 
-              <Button href="#features" variant="outlined" color="primary">
-                Check features
+              <Button
+                component={Link}
+                variant="outlined"
+                color="primary"
+                href="/nrowlson0/akingman0/issues"
+                naked
+              >
+                Live demo
               </Button>
             </div>
           </Grid>
           <Hidden smDown>
             <Grid item md={6}>
               <Image
-                src="/images/headerImage.jpg"
+                src="/images/headerImage.png"
                 className={classes.image}
                 alt="header example"
                 width={1024}
